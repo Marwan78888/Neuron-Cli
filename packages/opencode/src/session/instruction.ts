@@ -194,11 +194,25 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Config.S
             ].join("\n")
           : ""
 
-        return [
+        // Build the standard file outputs
+        const fileOutputs = [
           ...Array.from(paths).flatMap((item, i) => (files[i] ? [`Instructions from: ${item}\n${files[i]}`] : [])),
           ...urls.flatMap((item, i) => (remote[i] ? [`Instructions from: ${item}\n${remote[i]}`] : [])),
           ...(search ? [search] : []),
         ]
+
+        // If BOOTSTRAP.md exists in the resolved instruction paths, force onboarding
+        const pathsArr = Array.from(paths)
+        const hasBootstrap = pathsArr.some((p) => p.endsWith(BOOTSTRAP_FILE))
+        if (hasBootstrap) {
+          const directive = `IMPORTANT: BOOTSTRAP ONBOARDING\n\nYou MUST run the workspace onboarding described in BOOTSTRAP.md before doing any other work. Follow the steps in BOOTSTRAP.md exactly, ask the user the questions it lists, get explicit confirmations, and do not perform file edits, commands, or any further tasks until the onboarding completes. When onboarding finishes, delete BOOTSTRAP.md.`
+          return [directive, ...fileOutputs]
+        }
+
+        // No BOOTSTRAP.md — require memory files be reviewed at session start
+        const memoryDirective = `SESSION START: MEMORY CHECK\n\nAt the start of every new session, present the workspace memory files (AGENT.md, AGENTS.md, USER.md, MEMORY.md, IDENTITY.md, SOUL.md) to the user. For each file that exists, summarize it briefly and ask the user to confirm they have read and agree or to request changes. Do not proceed with other tasks until the user explicitly acknowledges these memory files.`
+
+        return [memoryDirective, ...fileOutputs]
       })
 
       const find = Effect.fn("Instruction.find")(function* (dir: string) {
