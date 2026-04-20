@@ -205,7 +205,16 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Config.S
         const pathsArr = Array.from(paths)
         const hasBootstrap = pathsArr.some((p) => p.endsWith(BOOTSTRAP_FILE))
         if (hasBootstrap) {
-          const directive = `IMPORTANT: BOOTSTRAP ONBOARDING\n\nYou MUST run the workspace onboarding described in BOOTSTRAP.md before doing any other work. Follow the steps in BOOTSTRAP.md exactly, ask the user the questions it lists, get explicit confirmations, and do not perform file edits, commands, or any further tasks until the onboarding completes. When onboarding finishes, delete BOOTSTRAP.md.`
+          const directive = `CRITICAL: BOOTSTRAP ONBOARDING REQUIRED\n\nYou are in a fresh workspace and MUST complete onboarding before any other task. 
+
+1. READ BOOTSTRAP.md immediately.
+2. Introduce yourself to the user exactly as instructed in BOOTSTRAP.md.
+3. Walk the user through the identity setup (name, vibe, nature, emoji).
+4. Update IDENTITY.md, USER.md, and MEMORY.md with the results.
+5. Discuss SOUL.md with the user.
+6. Only after all steps are done and the user is happy, DELETE BOOTSTRAP.md.
+
+DO NOT perform any other work, file edits, or commands until BOOTSTRAP.md is completed and deleted.`
           return [directive, ...fileOutputs]
         }
 

@@ -245,7 +245,7 @@ export interface Interface {
   readonly getAuthStatus: (mcpName: string) => Effect.Effect<AuthStatus>
 }
 
-export class Service extends Context.Service<Service, Interface>()("@opencode/MCP") {}
+export class Service extends Context.Service<Service, Interface>()("@opencode/MCP") { }
 
 export const layer = Layer.effect(
   Service,
@@ -266,7 +266,7 @@ export const layer = Layer.effect(
         (t) =>
           Effect.tryPromise({
             try: () => {
-              const client = new Client({ name: "opencode", version: InstallationVersion })
+              const client = new Client({ name: "Neuron", version: InstallationVersion })
               return withTimeout(client.connect(t), timeout).then(() => client)
             },
             catch: (e) => (e instanceof Error ? e : new Error(String(e))),
@@ -353,7 +353,7 @@ export const layer = Layer.effect(
                 return bus
                   .publish(TuiEvent.ToastShow, {
                     title: "MCP Authentication Required",
-                    message: `Server "${key}" requires authentication. Run: opencode mcp auth ${key}`,
+                    message: `Server "${key}" requires authentication. Run: Neuron mcp auth ${key}`,
                     variant: "warning",
                     duration: 8000,
                   })
@@ -536,7 +536,7 @@ export const layer = Layer.effect(
                     for (const dpid of pids) {
                       try {
                         process.kill(dpid, "SIGTERM")
-                      } catch {}
+                      } catch { }
                     }
                   }
                   yield* Effect.tryPromise(() => client.close()).pipe(Effect.ignore)
@@ -770,7 +770,7 @@ export const layer = Layer.effect(
 
       return yield* Effect.tryPromise({
         try: () => {
-          const client = new Client({ name: "opencode", version: InstallationVersion })
+          const client = new Client({ name: "Neuron", version: InstallationVersion })
           return client
             .connect(transport)
             .then(() => ({ authorizationUrl: "", oauthState, client }) satisfies AuthResult)
