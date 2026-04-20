@@ -1,0 +1,10 @@
+{
+  "publishes": {
+    "tidal-pepper-w5cr": {
+      "siteUrl": "https://tidal-pepper-w5cr.here.now/",
+      "claimToken": "1c67d5452a468135f4c04e1a3b6b1fe6422a582bd3ad7b25855d46a7af686504",
+      "claimUrl": "https://here.now/claim?slug=tidal-pepper-w5cr&token=1c67d5452a468135f4c04e1a3b6b1fe6422a582bd3ad7b25855d46a7af686504",
+      "expiresAt": "2026-04-19T23:32:01.200Z"
+    }
+  }
+}

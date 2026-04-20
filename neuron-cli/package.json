@@ -1,0 +1,25 @@
+{
+  "name": "@marwan_reyad/neuron-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Launcher CLI for the local Neuron project",
+  "license": "MIT",
+  "bin": {
+    "neuron": "bin/neuron.js"
+  },
+  "scripts": {
+    "start": "node ./bin/neuron.js start",
+    "help": "node ./bin/neuron.js help"
+  },
+  "files": [
+    "bin",
+    "install.sh",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
