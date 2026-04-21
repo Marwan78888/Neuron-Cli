@@ -113,12 +113,13 @@ function Welcome(props: { api: TuiPluginApi }) {
 }
 
 function View(props: { api: TuiPluginApi }) {
+  const baseline = props.api.state.session.count()
   const done = createMemo(() => props.api.kv.get("bootstrap_completed", false))
-  const first = createMemo(() => props.api.state.session.count() === 0)
-  const show = createMemo(() => first() && !done())
+  const show = createMemo(() => !done())
 
   createEffect(() => {
-    if (!first() && !done()) props.api.kv.set("bootstrap_completed", true)
+    if (done()) return
+    if (props.api.state.session.count() > baseline) props.api.kv.set("bootstrap_completed", true)
   })
 
   return (
