@@ -1,0 +1,9 @@
+Apply edits to multiple files in a single call.
+
+Use this tool when the user asks you to change two or more files in one action, or when you would otherwise issue two or more back-to-back `edit` calls that are independent of each other. All edits run concurrently; if any single edit fails, the others still apply and the failure is reported in the result.
+
+Each entry in `edits` has the same shape as the `edit` tool: `filePath`, `oldString`, `newString`, and optional `replaceAll`.
+
+Do not use this tool for multiple edits to the same file — use `multiedit` for that. Do not use this tool when later edits depend on earlier edits; use sequential `edit` calls instead.
+
+Return value summarises pass/fail per file and lists the failures with their error messages.
