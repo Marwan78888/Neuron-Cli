@@ -1495,8 +1495,13 @@ NOTE: At any point in time through this workflow you should feel free to ask the
 
             yield* plugin.trigger("experimental.chat.messages.transform", {}, { messages: msgs })
 
+            const userQuery = lastUserMsg?.parts
+              .flatMap((p) => (p.type === "text" && !p.synthetic && !p.ignored ? [p.text] : []))
+              .join(" ")
+              .trim()
+
             const [skills, env, instructions, modelMsgs] = yield* Effect.all([
-              sys.skills(agent),
+              sys.skills(agent, userQuery || undefined),
               Effect.sync(() => sys.environment(model)),
               instruction.system().pipe(Effect.orDie),
               MessageV2.toModelMessagesEffect(msgs, model),

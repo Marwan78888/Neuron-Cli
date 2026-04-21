@@ -18,6 +18,7 @@ import type { Provider } from "@/provider"
 import type { Agent } from "@/agent/agent"
 import { Permission } from "@/permission"
 import { Skill } from "@/skill"
+import { SkillRelevance } from "@/skill/relevance"
 
 function modelSpecific(model: Provider.Model) {
   const id = model.api.id.toLowerCase()
@@ -41,7 +42,7 @@ export function provider(model: Provider.Model) {
 
 export interface Interface {
   readonly environment: (model: Provider.Model) => string[]
-  readonly skills: (agent: Agent.Info) => Effect.Effect<string | undefined>
+  readonly skills: (agent: Agent.Info, query?: string) => Effect.Effect<string | undefined>
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/SystemPrompt") {}
@@ -69,18 +70,35 @@ export const layer = Layer.effect(
         ]
       },
 
-      skills: Effect.fn("SystemPrompt.skills")(function* (agent: Agent.Info) {
+      skills: Effect.fn("SystemPrompt.skills")(function* (agent: Agent.Info, query?: string) {
         if (Permission.disabled(["skill"], agent.permission).has("skill")) return
 
         const list = yield* skill.available(agent)
+        if (list.length === 0) return
 
-        return [
+        const header = [
           "Skills provide specialized instructions and workflows for specific tasks.",
           "Use the skill tool to load a skill when a task matches its description.",
+        ]
+
+        const recommended = query ? SkillRelevance.recommended(list, query, 3) : []
+        if (recommended.length === 0) {
           // the agents seem to ingest the information about skills a bit better if we present a more verbose
           // version of them here and a less verbose version in tool description, rather than vice versa.
-          Skill.fmt(list, { verbose: true }),
+          return [...header, Skill.fmt(list, { verbose: true })].join("\n")
+        }
+
+        const recommendedBlock = [
+          "<recommended_skills>",
+          "The following skills look particularly relevant to the current user request.",
+          "Consider loading one of them with the skill tool before other work:",
+          ...recommended.map(
+            (entry) =>
+              `  - ${entry.skill.name} (matched: ${entry.matched.slice(0, 4).join(", ")}) — ${entry.skill.description}`,
+          ),
+          "</recommended_skills>",
         ].join("\n")
+        return [...header, recommendedBlock, Skill.fmt(list, { verbose: true })].join("\n")
       }),
     })
   }),
