@@ -69,8 +69,7 @@ export const TaskTool = Tool.define(
         : undefined
 
       if (!session) {
-        const limitError = yield* TaskLimits.check(sessions, status, ctx.sessionID)
-        if (limitError) return yield* Effect.fail(limitError)
+        yield* TaskLimits.check(sessions, status, ctx.sessionID)
       }
 
       const nextSession =
