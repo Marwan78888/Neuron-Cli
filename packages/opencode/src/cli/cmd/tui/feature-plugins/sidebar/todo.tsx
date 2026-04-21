@@ -21,18 +21,17 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
   })
 
   const counts = createMemo(() => {
-    const b = buckets()
     const total = list().length
-    const done = b.completed.length + b.cancelled.length
+    const done = buckets().completed.length + buckets().cancelled.length
     return { total, done, remaining: total - done }
   })
 
   const progress = createMemo(() => {
-    const { total, done } = counts()
-    if (total === 0) return { filled: 0, empty: 0, label: "0 / 0" }
+    const c = counts()
+    if (c.total === 0) return { filled: 0, empty: 0, label: "0 / 0" }
     const width = 10
-    const filled = Math.max(0, Math.min(width, Math.round((done / total) * width)))
-    return { filled, empty: width - filled, label: `${done} / ${total}` }
+    const filled = Math.max(0, Math.min(width, Math.round((c.done / c.total) * width)))
+    return { filled, empty: width - filled, label: `${c.done} / ${c.total}` }
   })
 
   // Show the pane whenever there is any todo activity, even if the list is
@@ -42,13 +41,11 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
   const [expandCompleted, setExpandCompleted] = createSignal(false)
   const recentCompleted = createMemo(() => {
     const c = buckets().completed
-    const sliced = expandCompleted() ? c : c.slice(-RECENT_COMPLETED_LIMIT)
-    return sliced
+    return expandCompleted() ? c : c.slice(-RECENT_COMPLETED_LIMIT)
   })
   const hiddenCompleted = createMemo(() => {
-    const c = buckets().completed
     if (expandCompleted()) return 0
-    return Math.max(0, c.length - RECENT_COMPLETED_LIMIT)
+    return Math.max(0, buckets().completed.length - RECENT_COMPLETED_LIMIT)
   })
 
   return (
