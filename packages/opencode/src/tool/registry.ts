@@ -3,6 +3,8 @@ import { Session } from "../session"
 import { QuestionTool } from "./question"
 import { BashTool } from "./bash"
 import { EditTool } from "./edit"
+import { ParallelEditTool } from "./parallel_edit"
+import { ParallelReviewTool } from "./parallel_review"
 import { GlobTool } from "./glob"
 import { GrepTool } from "./grep"
 import { ReadTool } from "./read"
@@ -110,6 +112,8 @@ export const layer: Layer.Layer<
     const globtool = yield* GlobTool
     const writetool = yield* WriteTool
     const edit = yield* EditTool
+    const paralleledit = yield* ParallelEditTool
+    const parallelreview = yield* ParallelReviewTool
     const greptool = yield* GrepTool
     const patchtool = yield* ApplyPatchTool
     const skilltool = yield* SkillTool
@@ -183,6 +187,8 @@ export const layer: Layer.Layer<
           glob: Tool.init(globtool),
           grep: Tool.init(greptool),
           edit: Tool.init(edit),
+          parallelEdit: Tool.init(paralleledit),
+          parallelReview: Tool.init(parallelreview),
           write: Tool.init(writetool),
           task: Tool.init(task),
           fetch: Tool.init(webfetch),
@@ -206,6 +212,8 @@ export const layer: Layer.Layer<
             tool.glob,
             tool.grep,
             tool.edit,
+            tool.parallelEdit,
+            tool.parallelReview,
             tool.write,
             tool.task,
             tool.fetch,
