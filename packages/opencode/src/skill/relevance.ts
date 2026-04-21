@@ -73,8 +73,8 @@ const STOPWORDS = new Set([
   "make",
   "want",
   "need",
-  "need",
   "help",
+  "use",
 ])
 
 export interface Scored {
@@ -101,23 +101,10 @@ function uniq(list: string[]) {
 }
 
 export function score(skill: Info, queryTokens: Set<string>) {
-  const nameTokens = uniq(tokens(skill.name))
-  const descTokens = uniq(tokens(skill.description))
-  const matched: string[] = []
-  let total = 0
-  for (const t of nameTokens) {
-    if (queryTokens.has(t)) {
-      total += 3
-      matched.push(t)
-    }
-  }
-  for (const t of descTokens) {
-    if (queryTokens.has(t)) {
-      total += 1
-      if (!matched.includes(t)) matched.push(t)
-    }
-  }
-  return { skill, score: total, matched }
+  const nameMatches = uniq(tokens(skill.name)).filter((t) => queryTokens.has(t))
+  const descMatches = uniq(tokens(skill.description)).filter((t) => queryTokens.has(t))
+  const matched = [...new Set([...nameMatches, ...descMatches])]
+  return { skill, score: nameMatches.length * 3 + descMatches.length, matched }
 }
 
 export function rank(skills: Info[], query: string): Scored[] {
