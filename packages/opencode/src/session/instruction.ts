@@ -202,9 +202,7 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Config.S
         ]
 
         // If BOOTSTRAP.md exists in the resolved instruction paths, force onboarding
-        const pathsArr = Array.from(paths)
-        const hasBootstrap = pathsArr.some((p) => p.endsWith(BOOTSTRAP_FILE))
-        if (hasBootstrap) {
+        if (Array.from(paths).some((p) => p.endsWith(BOOTSTRAP_FILE))) {
           const directive = `CRITICAL: BOOTSTRAP ONBOARDING REQUIRED\n\nYou are in a fresh workspace and MUST complete onboarding before any other task. 
 
 1. READ BOOTSTRAP.md immediately.

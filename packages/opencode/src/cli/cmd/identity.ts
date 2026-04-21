@@ -80,8 +80,8 @@ export const IdentityCommand = cmd({
     if (envProviders.length > 0) {
       UI.empty()
       UI.println(UI.Style.TEXT_INFO_BOLD + "  Environment credentials:")
-      for (const { provider, envVar } of envProviders) {
-        UI.println(`    - ${provider} ${UI.Style.TEXT_DIM}via ${envVar}`)
+      for (const ep of envProviders) {
+        UI.println(`    - ${ep.provider} ${UI.Style.TEXT_DIM}via ${ep.envVar}`)
       }
     }
 
