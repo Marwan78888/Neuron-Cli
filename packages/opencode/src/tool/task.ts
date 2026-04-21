@@ -8,6 +8,7 @@ import { Agent } from "../agent/agent"
 import type { SessionPrompt } from "../session/prompt"
 import { Config } from "../config"
 import { Effect } from "effect"
+import { TaskLimits } from "./task-limits"
 
 export interface TaskPromptOps {
   cancel(sessionID: SessionID): void
@@ -64,6 +65,12 @@ export const TaskTool = Tool.define(
       const session = taskID
         ? yield* sessions.get(SessionID.make(taskID)).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
         : undefined
+
+      if (!session) {
+        const limitError = yield* TaskLimits.check(sessions, ctx.sessionID)
+        if (limitError) return yield* Effect.fail(limitError)
+      }
+
       const nextSession =
         session ??
         (yield* sessions.create({

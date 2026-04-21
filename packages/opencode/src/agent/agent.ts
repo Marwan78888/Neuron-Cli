@@ -13,6 +13,9 @@ import PROMPT_COMPACTION from "./prompt/compaction.txt"
 import PROMPT_EXPLORE from "./prompt/explore.txt"
 import PROMPT_SUMMARY from "./prompt/summary.txt"
 import PROMPT_TITLE from "./prompt/title.txt"
+import PROMPT_REVIEWER from "./prompt/reviewer.txt"
+import PROMPT_TEST_RUNNER from "./prompt/test-runner.txt"
+import PROMPT_DOC_WRITER from "./prompt/doc-writer.txt"
 import { Permission } from "@/permission"
 import { mergeDeep, pipe, sortBy, values } from "remeda"
 import { Global } from "@/global"
@@ -155,6 +158,72 @@ export const layer = Layer.effect(
               }),
               user,
             ),
+            options: {},
+            mode: "subagent",
+            native: true,
+          },
+          "code-reviewer": {
+            name: "code-reviewer",
+            description:
+              "Read-only code review specialist. Use when the user asks for a review, critique, or pre-merge check on a diff, a file, or a set of files. Returns a prioritized list of issues grouped by severity.",
+            permission: Permission.merge(
+              defaults,
+              Permission.fromConfig({
+                "*": "deny",
+                read: "allow",
+                grep: "allow",
+                glob: "allow",
+                list: "allow",
+                bash: "allow",
+                codesearch: "allow",
+              }),
+              user,
+            ),
+            prompt: PROMPT_REVIEWER,
+            options: {},
+            mode: "subagent",
+            native: true,
+          },
+          "test-runner": {
+            name: "test-runner",
+            description:
+              "Test execution and failure diagnosis specialist. Use when the user asks to run tests, check CI locally, or diagnose a failing test. Detects the framework, runs the minimal useful command, and returns a parsed summary with probable causes.",
+            permission: Permission.merge(
+              defaults,
+              Permission.fromConfig({
+                "*": "deny",
+                read: "allow",
+                grep: "allow",
+                glob: "allow",
+                list: "allow",
+                bash: "allow",
+                codesearch: "allow",
+              }),
+              user,
+            ),
+            prompt: PROMPT_TEST_RUNNER,
+            options: {},
+            mode: "subagent",
+            native: true,
+          },
+          "doc-writer": {
+            name: "doc-writer",
+            description:
+              "Documentation writer. Use when the user asks to write, update, or rewrite README sections, module docs, API references, or inline comments. Matches the repo's existing tone and only documents behavior that exists in the code.",
+            permission: Permission.merge(
+              defaults,
+              Permission.fromConfig({
+                edit: "allow",
+                write: "allow",
+                read: "allow",
+                grep: "allow",
+                glob: "allow",
+                list: "allow",
+                bash: "allow",
+              }),
+              user,
+            ),
+            prompt: PROMPT_DOC_WRITER,
             options: {},
             mode: "subagent",
             native: true,
