@@ -86,7 +86,7 @@ export interface Scored {
 function tokens(text: string) {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, " ")
+    .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/)
     .flatMap((t) => {
       if (!t) return []
