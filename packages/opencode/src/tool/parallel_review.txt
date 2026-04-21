@@ -1,0 +1,14 @@
+Review multiple files in parallel by spawning one `code-reviewer` sub-agent per file.
+
+Use this tool when the user asks you to review, critique, or pre-merge-check two or more files, diffs, or modules at once. It runs up to 5 reviewers concurrently and returns their findings in one consolidated result.
+
+Each entry in `targets` specifies:
+- `filePath` — the absolute path of the file (or directory) to review
+- `focus` — optional short note (e.g. "check error handling", "look for race conditions") passed through to the reviewer sub-agent
+
+Behaviour:
+- The sub-agent cap (`MAX_DIRECT_CHILDREN = 5`) still applies. Passing more than 5 targets is an error; split the list across turns instead.
+- Reviewers run under the `code-reviewer` native agent with read-only permissions.
+- If a reviewer fails, its error is reported in-line and other reviewers still complete.
+
+Do not use this for a single file — call `task` with `subagent_type: "code-reviewer"` directly.
