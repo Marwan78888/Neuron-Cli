@@ -534,8 +534,8 @@ export class Agent implements ACPAgent {
     log.info("initialize", { protocolVersion: params.protocolVersion })
 
     const authMethod: AuthMethod = {
-      description: "Run `opencode auth login` in the terminal",
-      name: "Login with opencode",
+      description: "Run `neuron auth login` in the terminal to connect a provider",
+      name: "Login with Neuron",
       id: "opencode-login",
     }
 
@@ -543,9 +543,9 @@ export class Agent implements ACPAgent {
     if (params.clientCapabilities?._meta?.["terminal-auth"] === true) {
       authMethod._meta = {
         "terminal-auth": {
-          command: "opencode",
+          command: "neuron",
           args: ["auth", "login"],
-          label: "OpenCode Login",
+          label: "Neuron Login",
         },
       }
     }
@@ -570,7 +570,7 @@ export class Agent implements ACPAgent {
       },
       authMethods: [authMethod],
       agentInfo: {
-        name: "OpenCode",
+        name: "Neuron",
         version: InstallationVersion,
       },
     }

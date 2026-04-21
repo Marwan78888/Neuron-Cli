@@ -8,6 +8,9 @@ import PROMPT_BEAST from "./prompt/beast.txt"
 import PROMPT_GEMINI from "./prompt/gemini.txt"
 import PROMPT_GPT from "./prompt/gpt.txt"
 import PROMPT_KIMI from "./prompt/kimi.txt"
+import PROMPT_GROK from "./prompt/grok.txt"
+import PROMPT_DEEPSEEK from "./prompt/deepseek.txt"
+import PROMPT_NEURON_CORE from "./prompt/neuron-core.txt"
 
 import PROMPT_CODEX from "./prompt/codex.txt"
 import PROMPT_TRINITY from "./prompt/trinity.txt"
@@ -16,20 +19,24 @@ import type { Agent } from "@/agent/agent"
 import { Permission } from "@/permission"
 import { Skill } from "@/skill"
 
-export function provider(model: Provider.Model) {
-  if (model.api.id.includes("gpt-4") || model.api.id.includes("o1") || model.api.id.includes("o3"))
-    return [PROMPT_BEAST]
-  if (model.api.id.includes("gpt")) {
-    if (model.api.id.includes("codex")) {
-      return [PROMPT_CODEX]
-    }
-    return [PROMPT_GPT]
+function modelSpecific(model: Provider.Model) {
+  const id = model.api.id.toLowerCase()
+  if (id.includes("gpt-4") || id.includes("o1") || id.includes("o3")) return PROMPT_BEAST
+  if (id.includes("gpt")) {
+    if (id.includes("codex")) return PROMPT_CODEX
+    return PROMPT_GPT
   }
-  if (model.api.id.includes("gemini-")) return [PROMPT_GEMINI]
-  if (model.api.id.includes("claude")) return [PROMPT_ANTHROPIC]
-  if (model.api.id.toLowerCase().includes("trinity")) return [PROMPT_TRINITY]
-  if (model.api.id.toLowerCase().includes("kimi")) return [PROMPT_KIMI]
-  return [PROMPT_DEFAULT]
+  if (id.includes("gemini-")) return PROMPT_GEMINI
+  if (id.includes("claude")) return PROMPT_ANTHROPIC
+  if (id.includes("trinity")) return PROMPT_TRINITY
+  if (id.includes("kimi")) return PROMPT_KIMI
+  if (id.includes("grok")) return PROMPT_GROK
+  if (id.includes("deepseek")) return PROMPT_DEEPSEEK
+  return PROMPT_DEFAULT
+}
+
+export function provider(model: Provider.Model) {
+  return [PROMPT_NEURON_CORE, modelSpecific(model)]
 }
 
 export interface Interface {

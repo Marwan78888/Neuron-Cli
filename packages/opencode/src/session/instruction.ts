@@ -194,11 +194,37 @@ export const layer: Layer.Layer<Service, never, AppFileSystem.Service | Config.S
             ].join("\n")
           : ""
 
-        return [
+        // Build the standard file outputs
+        const fileOutputs = [
           ...Array.from(paths).flatMap((item, i) => (files[i] ? [`Instructions from: ${item}\n${files[i]}`] : [])),
           ...urls.flatMap((item, i) => (remote[i] ? [`Instructions from: ${item}\n${remote[i]}`] : [])),
           ...(search ? [search] : []),
         ]
+
+        // If BOOTSTRAP.md exists in the resolved instruction paths, force onboarding
+        if (Array.from(paths).some((p) => p.endsWith(BOOTSTRAP_FILE))) {
+          const directive = `CRITICAL: BOOTSTRAP ONBOARDING REQUIRED\n\nYou are in a fresh workspace and MUST complete onboarding before any other task. 
+
+1. READ BOOTSTRAP.md immediately.
+2. Introduce yourself to the user exactly as instructed in BOOTSTRAP.md.
+3. Walk the user through the identity setup (name, vibe, nature, emoji).
+4. Update IDENTITY.md, USER.md, and MEMORY.md with the results.
+5. Discuss SOUL.md with the user.
+6. Only after all steps are done and the user is happy, DELETE BOOTSTRAP.md.
+
+DO NOT perform any other work, file edits, or commands until BOOTSTRAP.md is completed and deleted.`
+          return [directive, ...fileOutputs]
+        }
+
+        // Only fire the memory-check directive when a Neuron-specific memory file is present.
+        // AGENT.md / AGENTS.md are standard across repos — they don't indicate the Neuron memory system.
+        const NEURON_MEMORY_FILES = ["USER.md", "MEMORY.md", "IDENTITY.md", "SOUL.md"]
+        if (Array.from(paths).some((p) => NEURON_MEMORY_FILES.some((f) => p.endsWith(f)))) {
+          const memoryDirective = `SESSION START: MEMORY CHECK\n\nAt the start of every new session, present the workspace memory files (USER.md, MEMORY.md, IDENTITY.md, SOUL.md) to the user. For each file that exists, summarize it briefly and ask the user to confirm they have read and agree or to request changes. Do not proceed with other tasks until the user explicitly acknowledges these memory files.`
+          return [memoryDirective, ...fileOutputs]
+        }
+
+        return fileOutputs
       })
 
       const find = Effect.fn("Instruction.find")(function* (dir: string) {
