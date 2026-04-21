@@ -216,10 +216,15 @@ DO NOT perform any other work, file edits, or commands until BOOTSTRAP.md is com
           return [directive, ...fileOutputs]
         }
 
-        // No BOOTSTRAP.md — require memory files be reviewed at session start
-        const memoryDirective = `SESSION START: MEMORY CHECK\n\nAt the start of every new session, present the workspace memory files (AGENT.md, AGENTS.md, USER.md, MEMORY.md, IDENTITY.md, SOUL.md) to the user. For each file that exists, summarize it briefly and ask the user to confirm they have read and agree or to request changes. Do not proceed with other tasks until the user explicitly acknowledges these memory files.`
+        // Only fire the memory-check directive when a Neuron-specific memory file is present.
+        // AGENT.md / AGENTS.md are standard across repos — they don't indicate the Neuron memory system.
+        const NEURON_MEMORY_FILES = ["USER.md", "MEMORY.md", "IDENTITY.md", "SOUL.md"]
+        if (Array.from(paths).some((p) => NEURON_MEMORY_FILES.some((f) => p.endsWith(f)))) {
+          const memoryDirective = `SESSION START: MEMORY CHECK\n\nAt the start of every new session, present the workspace memory files (USER.md, MEMORY.md, IDENTITY.md, SOUL.md) to the user. For each file that exists, summarize it briefly and ask the user to confirm they have read and agree or to request changes. Do not proceed with other tasks until the user explicitly acknowledges these memory files.`
+          return [memoryDirective, ...fileOutputs]
+        }
 
-        return [memoryDirective, ...fileOutputs]
+        return fileOutputs
       })
 
       const find = Effect.fn("Instruction.find")(function* (dir: string) {
