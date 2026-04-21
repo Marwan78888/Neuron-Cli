@@ -353,7 +353,7 @@ export const layer = Layer.effect(
                 return bus
                   .publish(TuiEvent.ToastShow, {
                     title: "MCP Authentication Required",
-                    message: `Server "${key}" requires authentication. Run: Neuron mcp auth ${key}`,
+                    message: `Server "${key}" requires authentication. Run: neuron mcp auth ${key}`,
                     variant: "warning",
                     duration: 8000,
                   })

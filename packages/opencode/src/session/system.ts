@@ -21,9 +21,9 @@ import { Skill } from "@/skill"
 
 function modelSpecific(model: Provider.Model) {
   const id = model.api.id.toLowerCase()
-  if (model.api.id.includes("gpt-4") || model.api.id.includes("o1") || model.api.id.includes("o3")) return PROMPT_BEAST
-  if (model.api.id.includes("gpt")) {
-    if (model.api.id.includes("codex")) return PROMPT_CODEX
+  if (id.includes("gpt-4") || id.includes("o1") || id.includes("o3")) return PROMPT_BEAST
+  if (id.includes("gpt")) {
+    if (id.includes("codex")) return PROMPT_CODEX
     return PROMPT_GPT
   }
   if (id.includes("gemini-")) return PROMPT_GEMINI
