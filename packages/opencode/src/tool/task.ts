@@ -2,6 +2,7 @@ import * as Tool from "./tool"
 import DESCRIPTION from "./task.txt"
 import z from "zod"
 import { Session } from "../session"
+import { SessionStatus } from "../session/status"
 import { SessionID, MessageID } from "../session/schema"
 import { MessageV2 } from "../session/message-v2"
 import { Agent } from "../agent/agent"
@@ -37,6 +38,7 @@ export const TaskTool = Tool.define(
     const agent = yield* Agent.Service
     const config = yield* Config.Service
     const sessions = yield* Session.Service
+    const status = yield* SessionStatus.Service
 
     const run = Effect.fn("TaskTool.execute")(function* (params: z.infer<typeof parameters>, ctx: Tool.Context) {
       const cfg = yield* config.get()
@@ -67,7 +69,7 @@ export const TaskTool = Tool.define(
         : undefined
 
       if (!session) {
-        const limitError = yield* TaskLimits.check(sessions, ctx.sessionID)
+        const limitError = yield* TaskLimits.check(sessions, status, ctx.sessionID)
         if (limitError) return yield* Effect.fail(limitError)
       }
 

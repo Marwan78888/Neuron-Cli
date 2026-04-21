@@ -79,7 +79,7 @@ Good reasons to delegate:
 
 Hard caps enforced by the runtime:
 
-- At most 5 direct sub-agents per parent session. Wait for one to finish before spawning a sixth.
+- At most 5 *running* direct sub-agents per parent session. Wait for one to finish before spawning a sixth — finished sub-agents do not count against the cap.
 - Depth 2 maximum — a sub-agent cannot spawn its own sub-agent.
 - At most 20 sub-agents total across the whole session tree.
 
