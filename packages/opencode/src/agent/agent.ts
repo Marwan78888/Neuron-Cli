@@ -213,6 +213,7 @@ export const layer = Layer.effect(
             permission: Permission.merge(
               defaults,
               Permission.fromConfig({
+                "*": "deny",
                 edit: "allow",
                 write: "allow",
                 read: "allow",
