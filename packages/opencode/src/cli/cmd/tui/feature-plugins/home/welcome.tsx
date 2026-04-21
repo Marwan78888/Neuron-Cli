@@ -113,13 +113,16 @@ function Welcome(props: { api: TuiPluginApi }) {
 }
 
 function View(props: { api: TuiPluginApi }) {
-  const baseline = props.api.state.session.count()
+  const [baseline, setBaseline] = createSignal(props.api.state.session.count())
   const done = createMemo(() => props.api.kv.get("bootstrap_completed", false))
   const show = createMemo(() => !done())
 
   createEffect(() => {
-    if (done()) return
-    if (props.api.state.session.count() > baseline) props.api.kv.set("bootstrap_completed", true)
+    if (done()) {
+      setBaseline(props.api.state.session.count())
+      return
+    }
+    if (props.api.state.session.count() > baseline()) props.api.kv.set("bootstrap_completed", true)
   })
 
   return (
