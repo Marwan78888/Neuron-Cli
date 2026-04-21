@@ -16,6 +16,7 @@ import { Bus } from "../bus"
 import { ProviderTransform } from "../provider"
 import { SystemPrompt } from "./system"
 import { Instruction } from "./instruction"
+import { Safety } from "./safety"
 import { Plugin } from "../plugin"
 import PROMPT_PLAN from "../session/prompt/plan.txt"
 import BUILD_SWITCH from "../session/prompt/build-switch.txt"
@@ -1227,9 +1228,33 @@ NOTE: At any point in time through this workflow you should feel free to ask the
         return [{ ...part, messageID: info.id, sessionID: input.sessionID }]
       })
 
-      const parts = yield* Effect.forEach(input.parts, resolvePart, { concurrency: "unbounded" }).pipe(
+      const resolved = yield* Effect.forEach(input.parts, resolvePart, { concurrency: "unbounded" }).pipe(
         Effect.map((x) => x.flat().map(assign)),
       )
+
+      // Safety scan: inspect user-authored (non-synthetic) text parts for
+      // jailbreak / prompt-injection patterns. If anything matches, prepend
+      // a synthetic advisory so the model sees the reminder with full
+      // context. Never drop or mutate the user's original parts.
+      const userText = resolved
+        .filter((p) => p.type === "text" && !p.synthetic)
+        .map((p) => (p.type === "text" ? p.text : ""))
+        .join("\n")
+      const scan = Safety.scanUserText(userText)
+      const advisoryBody = Safety.buildAdvisory(scan)
+      const parts =
+        advisoryBody !== undefined
+          ? [
+              assign({
+                messageID: info.id,
+                sessionID: input.sessionID,
+                type: "text" as const,
+                synthetic: true,
+                text: advisoryBody,
+              }),
+              ...resolved,
+            ]
+          : resolved
 
       yield* plugin.trigger(
         "chat.message",
