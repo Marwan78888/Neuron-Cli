@@ -22,7 +22,7 @@ type WorkspaceConfig = Omit<Config, "permission"> & {
     paths?: string[]
     urls?: string[]
   }
-  permission?: any
+  permission?: unknown
 }
 
 function currentProvider(config: WorkspaceConfig) {
