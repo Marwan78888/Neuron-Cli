@@ -2,12 +2,14 @@ import * as Tool from "./tool"
 import DESCRIPTION from "./task.txt"
 import z from "zod"
 import { Session } from "../session"
+import { SessionStatus } from "../session/status"
 import { SessionID, MessageID } from "../session/schema"
 import { MessageV2 } from "../session/message-v2"
 import { Agent } from "../agent/agent"
 import type { SessionPrompt } from "../session/prompt"
 import { Config } from "../config"
 import { Effect } from "effect"
+import { TaskLimits } from "./task-limits"
 
 export interface TaskPromptOps {
   cancel(sessionID: SessionID): void
@@ -36,6 +38,7 @@ export const TaskTool = Tool.define(
     const agent = yield* Agent.Service
     const config = yield* Config.Service
     const sessions = yield* Session.Service
+    const status = yield* SessionStatus.Service
 
     const run = Effect.fn("TaskTool.execute")(function* (params: z.infer<typeof parameters>, ctx: Tool.Context) {
       const cfg = yield* config.get()
@@ -64,6 +67,11 @@ export const TaskTool = Tool.define(
       const session = taskID
         ? yield* sessions.get(SessionID.make(taskID)).pipe(Effect.catchCause(() => Effect.succeed(undefined)))
         : undefined
+
+      if (!session) {
+        yield* TaskLimits.check(sessions, status, ctx.sessionID)
+      }
+
       const nextSession =
         session ??
         (yield* sessions.create({
