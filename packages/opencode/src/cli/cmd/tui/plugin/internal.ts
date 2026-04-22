@@ -1,5 +1,6 @@
 import HomeFooter from "../feature-plugins/home/footer"
 import HomeTips from "../feature-plugins/home/tips"
+import HomeWelcome from "../feature-plugins/home/welcome"
 import SidebarContext from "../feature-plugins/sidebar/context"
 import SidebarProgress from "../feature-plugins/sidebar/progress"
 import SidebarSession from "../feature-plugins/sidebar/session"
@@ -19,6 +20,7 @@ export type InternalTuiPlugin = TuiPluginModule & {
 export const INTERNAL_TUI_PLUGINS: InternalTuiPlugin[] = [
   HomeFooter,
   HomeTips,
+  HomeWelcome,
   SidebarSession,
   SidebarContext,
   SidebarProgress,
