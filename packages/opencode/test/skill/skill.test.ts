@@ -142,7 +142,7 @@ description: Second test skill.
     ),
   )
 
-  it.live("skips skills with missing frontmatter", () =>
+  it.live("falls back to directory name and first paragraph when frontmatter is missing", () =>
     provideTmpdirInstance(
       (dir) =>
         Effect.gen(function* () {
@@ -157,7 +157,9 @@ Just some content without YAML frontmatter.
           )
 
           const skill = yield* Skill.Service
-          expect(yield* skill.all()).toEqual([])
+          const list = yield* skill.all()
+          expect(list.length).toBe(1)
+          expect(list[0].name).toBe("no-frontmatter")
         }),
       { git: true },
     ),
