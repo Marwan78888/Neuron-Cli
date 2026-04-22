@@ -11,6 +11,7 @@ import { Global } from "../../global"
 import { Filesystem } from "../../util"
 import * as Archive from "../../util/archive"
 import * as ConfigMarkdown from "../../config/markdown"
+import { Glob } from "@opencode-ai/shared/util/glob"
 
 type SkillScope = "global" | "project"
 type SkillEcosystem = "agents" | "claude" | "openclaw"
@@ -47,7 +48,7 @@ async function resolveSkillDir(input: string) {
     const direct = path.join(target, "SKILL.md")
     if (await Filesystem.exists(direct)) return target
 
-    const matches = await Filesystem.glob("**/SKILL.md", { cwd: target, absolute: true, dot: true })
+    const matches = await Glob.scan("**/SKILL.md", { cwd: target, absolute: true, dot: true })
     if (matches.length === 1) return path.dirname(matches[0])
     if (matches.length > 1) {
       throw new Error(`Multiple skills found in ${input}. Point to one skill directory or SKILL.md file.`)
@@ -61,10 +62,10 @@ async function resolveSkillDir(input: string) {
   if (lower.endsWith(".skill") || lower.endsWith(".zip")) {
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "neuron-skill-unpack-"))
     await Archive.extractZip(target, tempDir)
-    const matches = await Filesystem.glob("**/SKILL.md", { cwd: tempDir, absolute: true, dot: true })
+    const matches = await Glob.scan("**/SKILL.md", { cwd: tempDir, absolute: true, dot: true })
     if (matches.length === 0) throw new Error(`No SKILL.md found in package: ${input}`)
     if (matches.length > 1) {
-      const topLevel = matches.find((item) => path.basename(path.dirname(item)) !== "__MACOSX") ?? matches[0]
+      const topLevel = matches.find((item: string) => path.basename(path.dirname(item)) !== "__MACOSX") ?? matches[0]
       return path.dirname(topLevel)
     }
     return path.dirname(matches[0])
@@ -153,7 +154,7 @@ export const SkillCommand = cmd({
   command: "skill",
   describe: "list or import skills",
   builder: (yargs) => yargs.command(SkillListCommand).command(SkillImportCommand).demandCommand(0),
-  async handler() {
-    await SkillListCommand.handler()
+  async handler(args) {
+    await SkillListCommand.handler(args)
   },
 })

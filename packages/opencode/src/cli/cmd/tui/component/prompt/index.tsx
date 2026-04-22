@@ -861,7 +861,7 @@ export function Prompt(props: PromptProps) {
           model: selectedModel,
           variant,
           system: EXECUTION_MODE_SYSTEM[executionMode()],
-          tools: executionMode() === "auto" ? undefined : EXECUTION_MODE_TOOLS[executionMode()],
+          tools: executionMode() === "auto" ? undefined : EXECUTION_MODE_TOOLS[executionMode() as Exclude<ExecutionMode, "auto">],
           parts: [
             {
               id: PartID.ascending(),

@@ -13,7 +13,7 @@ const AGENT_BROWSER_SKILL_URL = "https://skills.sh/vercel-labs/agent-browser/age
 
 type SearchProviderID = "perplexity" | "brave"
 
-type WorkspaceConfig = Config & {
+type WorkspaceConfig = Omit<Config, "permission"> & {
   search?: {
     provider?: SearchProviderID
     apiKey?: string
@@ -22,7 +22,7 @@ type WorkspaceConfig = Config & {
     paths?: string[]
     urls?: string[]
   }
-  permission?: unknown
+  permission?: any
 }
 
 function currentProvider(config: WorkspaceConfig) {

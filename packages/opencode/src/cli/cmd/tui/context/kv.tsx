@@ -1,6 +1,6 @@
 import { Global } from "@/global"
 import { Filesystem } from "@/util"
-import { createSignal, type Setter } from "solid-js"
+import { createSignal } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSimpleContext } from "./helper"
 import path from "path"
@@ -31,11 +31,12 @@ export const { use: useKV, provider: KVProvider } = createSimpleContext({
       signal<T>(name: string, defaultValue: T) {
         if (store[name] === undefined) setStore(name, defaultValue)
         return [
-          function () {
-            return result.get(name)
+          function (): T {
+            return result.get(name, defaultValue) as T
           },
-          function setter(next: Setter<T>) {
-            result.set(name, next)
+          function setter(next: T | ((prev: T) => T)) {
+            const value = typeof next === "function" ? (next as (prev: T) => T)(result.get(name, defaultValue) as T) : next
+            result.set(name, value)
           },
         ] as const
       },
