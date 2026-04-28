@@ -1,0 +1,12 @@
+{
+  "profile": "openai",
+  "env": {
+    "OPENAI_BASE_URL": "https://openrouter.ai/api/v1",
+    "OPENAI_MODEL": "nvidia/nemotron-3-super-120b-a12b:free",
+    "OPENAI_API_FORMAT": "responses",
+    "OPENAI_AUTH_HEADER": "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",
+    "OPENAI_AUTH_SCHEME": "raw",
+    "OPENAI_API_KEY": "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"
+  },
+  "createdAt": "2026-04-26T14:41:01.896Z"
+}

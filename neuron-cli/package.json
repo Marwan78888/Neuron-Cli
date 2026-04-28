@@ -1,0 +1,13 @@
+{
+  "name": "@marwan_reyad/neuron-agent",
+  "version": "0.6.0",
+  "description": "Programmatic API and global CLI wrapper for the Neuron coding agent",
+  "type": "module",
+  "bin": {
+    "neuron": "./bin/neuron.js"
+  },
+  "main": "./index.js",
+  "dependencies": {
+    "@gitlawb/neuron": "file:.."
+  }
+}

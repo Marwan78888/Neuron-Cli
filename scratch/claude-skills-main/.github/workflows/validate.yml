@@ -1,0 +1,48 @@
+name: Validate Skills
+
+on:
+  workflow_call:
+
+jobs:
+  validate:
+    name: Validate Skills & Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate skills
+        run: python scripts/validate-skills.py
+
+      - name: Validate markdown
+        run: python scripts/validate-markdown.py --check
+
+      - name: Check docs in sync
+        run: python scripts/update-docs.py --check
+
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - run: npm ci --prefix site
+      - uses: pre-commit/action@v3.0.1
+      - name: Check Astro formatting
+        run: cd site && npx prettier --plugin prettier-plugin-astro --check "src/**/*.astro"
+      - name: Check Markdown formatting
+        run: npx prettier --check "skills/**/*.md" "docs/**/*.md" "*.md" "research/**/*.md"
