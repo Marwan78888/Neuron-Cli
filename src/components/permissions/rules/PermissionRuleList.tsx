@@ -1098,7 +1098,7 @@ export function PermissionRuleList(t0) {
   }
   let t28;
   if ($[89] === Symbol.for("react.memo_cache_sentinel")) {
-    t28 = <Text>Claude Code can read files in the workspace, and make edits when auto-accept edits is on.</Text>;
+    t28 = <Text>Neuron can read files in the workspace, and make edits when auto-accept edits is on.</Text>;
     $[89] = t28;
   } else {
     t28 = $[89];

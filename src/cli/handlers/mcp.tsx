@@ -434,12 +434,12 @@ export async function mcpAddFromDesktopHandler(options: {
     const {
       unmount
     } = await render(<AppStateProvider>
-        <KeybindingSetup>
-          <MCPServerDesktopImportDialog servers={servers} scope={scope} onDone={() => {
+      <KeybindingSetup>
+        <MCPServerDesktopImportDialog servers={servers} scope={scope} onDone={() => {
           unmount();
         }} />
-        </KeybindingSetup>
-      </AppStateProvider>, {
+      </KeybindingSetup>
+    </AppStateProvider>, {
       exitOnCtrlC: true
     });
   } catch (error) {
@@ -456,5 +456,5 @@ export async function mcpResetChoicesHandler(): Promise<void> {
     disabledMcpjsonServers: [],
     enableAllProjectMcpServers: false
   }));
-  cliOk('All project-scoped (.mcp.json) server approvals and rejections have been reset.\n' + 'You will be prompted for approval next time you start Claude Code.');
+  cliOk('All project-scoped (.mcp.json) server approvals and rejections have been reset.\n' + 'You will be prompted for approval next time you start Neuron.');
 }

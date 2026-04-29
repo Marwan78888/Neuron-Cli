@@ -33,7 +33,7 @@ export function registerMcpXaaIdpCommand(mcp: Command): void {
       'Configure the IdP connection (one-time setup for all XAA-enabled servers)',
     )
     .requiredOption('--issuer <url>', 'IdP issuer URL (OIDC discovery)')
-    .requiredOption('--client-id <id>', "Claude Code's client_id at the IdP")
+    .requiredOption('--client-id <id>', "Neuron's client_id at the IdP")
     .option(
       '--client-secret',
       'Read IdP client secret from MCP_XAA_IDP_CLIENT_SECRET env var',
@@ -140,7 +140,7 @@ export function registerMcpXaaIdpCommand(mcp: Command): void {
         if (!success) {
           return cliError(
             `Error: settings written but keychain save failed${warning ? ` — ${warning}` : ''}. ` +
-              `Re-run with --client-secret once keychain is available.`,
+            `Re-run with --client-secret once keychain is available.`,
           )
         }
       }
@@ -152,9 +152,9 @@ export function registerMcpXaaIdpCommand(mcp: Command): void {
     .command('login')
     .description(
       'Cache an IdP id_token so XAA-enabled MCP servers authenticate ' +
-        'silently. Default: run the OIDC browser login. With --id-token: ' +
-        'write a pre-obtained JWT directly (used by conformance/e2e tests ' +
-        'where the mock IdP does not serve /authorize).',
+      'silently. Default: run the OIDC browser login. With --id-token: ' +
+      'write a pre-obtained JWT directly (used by conformance/e2e tests ' +
+      'where the mock IdP does not serve /authorize).',
     )
     .option(
       '--force',

@@ -72,7 +72,7 @@ export async function setup(
     // biome-ignore lint/suspicious/noConsole:: intentional console output
     console.error(
       chalk.bold.red(
-        'Error: Claude Code requires Node.js version 18 or higher.',
+        'Error: Neuron requires Node.js version 18 or higher.',
       ),
     )
     process.exit(1)
@@ -182,7 +182,7 @@ export async function setup(
       process.stderr.write(
         chalk.red(
           `Error: Can only use --worktree in a git repository, but ${chalk.bold(cwd)} is not a git repository. ` +
-            `Configure a WorktreeCreate hook in settings.json to use --worktree with other VCS systems.\n`,
+          `Configure a WorktreeCreate hook in settings.json to use --worktree with other VCS systems.\n`,
         ),
       )
       process.exit(1)
@@ -294,7 +294,7 @@ export async function setup(
     initSessionMemory() // Synchronous - registers hook, gate check happens lazily
     if (feature('CONTEXT_COLLAPSE')) {
       /* eslint-disable @typescript-eslint/no-require-imports */
-      ;(
+      ; (
         require('./services/contextCollapse/index.js') as typeof import('./services/contextCollapse/index.js')
       ).initContextCollapse()
       /* eslint-enable @typescript-eslint/no-require-imports */

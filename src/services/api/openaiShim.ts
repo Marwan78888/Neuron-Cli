@@ -945,6 +945,8 @@ async function* openaiStreamToAnthropic(
 
   const reader = response.body?.getReader()
   if (!reader) return
+  const streamReader = reader
+  type StreamReadResult = Awaited<ReturnType<typeof streamReader.read>>
 
   const decoder = new TextDecoder()
   let buffer = ''
@@ -959,7 +961,7 @@ async function* openaiStreamToAnthropic(
    * Respects the caller's AbortSignal — clears the idle timer on abort
    * so the rejection reason is AbortError, not a spurious idle timeout.
    */
-  async function readWithTimeout(): Promise<ReadableStreamReadResult<Uint8Array>> {
+  async function readWithTimeout(): Promise<StreamReadResult> {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
         const elapsed = Math.round((Date.now() - lastDataTime) / 1000)
@@ -978,7 +980,7 @@ async function* openaiStreamToAnthropic(
         signal.addEventListener('abort', abortCleanup, { once: true })
       }
 
-      reader.read().then(
+      streamReader.read().then(
         result => {
           clearTimeout(timeoutId)
           if (signal && abortCleanup) signal.removeEventListener('abort', abortCleanup)
@@ -1114,6 +1116,8 @@ async function* openaiStreamToAnthropic(
                 normalizeAtStop,
               })
 
+              const thoughtSignature = (tc.extra_content?.google as any)
+                ?.thought_signature
               yield {
                 type: 'content_block_start',
                 index: toolBlockIndex,
@@ -1124,10 +1128,9 @@ async function* openaiStreamToAnthropic(
                   input: {},
                   ...(tc.extra_content ? { extra_content: tc.extra_content } : {}),
                   // Extract Gemini signature from extra_content
-                  ...((tc.extra_content?.google as any)?.thought_signature
+                  ...(thoughtSignature
                     ? {
-                        signature: (tc.extra_content.google as any)
-                          .thought_signature,
+                        signature: thoughtSignature,
                       }
                     : {}),
                 },
@@ -1540,6 +1543,9 @@ class OpenAIShimMessages {
         isDeepSeekBaseUrl(request.baseUrl) ||
         isZaiBaseUrl(request.baseUrl),
     })
+    const responsesInput = convertAnthropicMessagesToResponsesInput(
+      compressedMessages,
+    )
 
     const body: Record<string, unknown> = {
       model: request.resolvedModel,
@@ -1671,13 +1677,7 @@ class OpenAIShimMessages {
     const buildResponsesBody = (): Record<string, unknown> => {
       const responsesBody: Record<string, unknown> = {
         model: request.resolvedModel,
-        input: convertAnthropicMessagesToResponsesInput(
-          params.messages as Array<{
-            role?: string
-            message?: { role?: string; content?: unknown }
-            content?: unknown
-          }>,
-        ),
+        input: responsesInput,
         stream: params.stream ?? false,
         store: false,
       }
@@ -2002,6 +2002,15 @@ class OpenAIShimMessages {
         throwClassifiedTransportError(error, requestUrl, failure)
       }
 
+      if (!response) {
+        throw APIError.generate(
+          500,
+          undefined,
+          'OpenAI shim: request completed without a response object',
+          new Headers(),
+        )
+      }
+
       if (response.ok) {
         let tokensIn = 0
         let tokensOut = 0
@@ -2046,7 +2055,7 @@ class OpenAIShimMessages {
           const responsesUrl = `${request.baseUrl}/responses`
           const responsesBody = buildResponsesBody()
 
-          let responsesResponse: Response
+          let responsesResponse: Response | undefined
           try {
             responsesResponse = await fetchWithProxyRetry(responsesUrl, {
               method: 'POST',
@@ -2056,6 +2065,15 @@ class OpenAIShimMessages {
             })
           } catch (error) {
             throwClassifiedTransportError(error, responsesUrl)
+          }
+
+          if (!responsesResponse) {
+            throw APIError.generate(
+              500,
+              undefined,
+              'OpenAI shim: GitHub /responses fallback completed without a response object',
+              new Headers(),
+            )
           }
 
           if (responsesResponse.ok) {
@@ -2214,6 +2232,8 @@ class OpenAIShimMessages {
           tc.function.name,
           tc.function.arguments,
         )
+        const thoughtSignature = (tc.extra_content?.google as any)
+          ?.thought_signature
         content.push({
           type: 'tool_use',
           id: tc.id,
@@ -2221,8 +2241,8 @@ class OpenAIShimMessages {
           input,
           ...(tc.extra_content ? { extra_content: tc.extra_content } : {}),
           // Extract Gemini signature from extra_content
-          ...((tc.extra_content?.google as any)?.thought_signature
-            ? { signature: (tc.extra_content.google as any).thought_signature }
+          ...(thoughtSignature
+            ? { signature: thoughtSignature }
             : {}),
         })
       }

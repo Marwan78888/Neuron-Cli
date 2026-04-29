@@ -157,16 +157,16 @@ function Web({
   }
   const token = step.token;
   return <Dialog title="Connect Claude on the web to GitHub?" onCancel={handleCancel} hideInputGuide>
-      <Box flexDirection="column">
-        <Text>
-          Claude on the web requires connecting to your GitHub account to clone
-          and push code on your behalf.
-        </Text>
-        <Text dimColor>
-          Your local credentials are used to authenticate with GitHub
-        </Text>
-      </Box>
-      <Select options={[{
+    <Box flexDirection="column">
+      <Text>
+        Neuron on the web requires connecting to your GitHub account to clone
+        and push code on your behalf.
+      </Text>
+      <Text dimColor>
+        Your local credentials are used to authenticate with GitHub
+      </Text>
+    </Box>
+    <Select options={[{
       label: 'Continue',
       value: 'send'
     }, {
@@ -179,7 +179,7 @@ function Web({
         handleCancel();
       }
     }} onCancel={handleCancel} />
-    </Dialog>;
+  </Dialog>;
 }
 export async function call(onDone: LocalJSXCommandOnDone): Promise<React.ReactNode> {
   return <Web onDone={onDone} />;

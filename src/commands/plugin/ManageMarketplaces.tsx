@@ -540,56 +540,56 @@ export function ManageMarketplaces({
   }
   if (marketplaceStates.length === 0) {
     return <Box flexDirection="column">
-        <Box marginBottom={1}>
-          <Text bold>Manage marketplaces</Text>
-        </Box>
+      <Box marginBottom={1}>
+        <Text bold>Manage marketplaces</Text>
+      </Box>
 
-        {/* Add Marketplace option */}
-        <Box flexDirection="row" gap={1}>
-          <Text color="suggestion">{figures.pointer} +</Text>
-          <Text bold color="suggestion">
-            Add Marketplace
-          </Text>
-        </Box>
+      {/* Add Marketplace option */}
+      <Box flexDirection="row" gap={1}>
+        <Text color="suggestion">{figures.pointer} +</Text>
+        <Text bold color="suggestion">
+          Add Marketplace
+        </Text>
+      </Box>
 
-        <Box marginLeft={3}>
-          <Text dimColor italic>
-            {exitState.pending ? <>Press {exitState.keyName} again to go back</> : <Byline>
-                <ConfigurableShortcutHint action="select:accept" context="Select" fallback="Enter" description="select" />
-                <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="go back" />
-              </Byline>}
-          </Text>
-        </Box>
-      </Box>;
+      <Box marginLeft={3}>
+        <Text dimColor italic>
+          {exitState.pending ? <>Press {exitState.keyName} again to go back</> : <Byline>
+            <ConfigurableShortcutHint action="select:accept" context="Select" fallback="Enter" description="select" />
+            <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="go back" />
+          </Byline>}
+        </Text>
+      </Box>
+    </Box>;
   }
 
   // Show confirmation dialog
   if (internalView === 'confirm-remove' && selectedMarketplace) {
     const pluginCount = selectedMarketplace.installedPlugins?.length || 0;
     return <Box flexDirection="column">
-        <Text bold color="warning">
-          Remove marketplace <Text italic>{selectedMarketplace.name}</Text>?
-        </Text>
-        <Box flexDirection="column">
-          {pluginCount > 0 && <Box marginTop={1}>
-              <Text color="warning">
-                This will also uninstall {pluginCount}{' '}
-                {plural(pluginCount, 'plugin')} from this marketplace:
-              </Text>
-            </Box>}
-          {selectedMarketplace.installedPlugins && selectedMarketplace.installedPlugins.length > 0 && <Box flexDirection="column" marginTop={1} marginLeft={2}>
-                {selectedMarketplace.installedPlugins.map(plugin => <Text key={plugin.name} dimColor>
-                    • {plugin.name}
-                  </Text>)}
-              </Box>}
-          <Box marginTop={1}>
-            <Text>
-              Press <Text bold>y</Text> to confirm or <Text bold>n</Text> to
-              cancel
-            </Text>
-          </Box>
+      <Text bold color="warning">
+        Remove marketplace <Text italic>{selectedMarketplace.name}</Text>?
+      </Text>
+      <Box flexDirection="column">
+        {pluginCount > 0 && <Box marginTop={1}>
+          <Text color="warning">
+            This will also uninstall {pluginCount}{' '}
+            {plural(pluginCount, 'plugin')} from this marketplace:
+          </Text>
+        </Box>}
+        {selectedMarketplace.installedPlugins && selectedMarketplace.installedPlugins.length > 0 && <Box flexDirection="column" marginTop={1} marginLeft={2}>
+          {selectedMarketplace.installedPlugins.map(plugin => <Text key={plugin.name} dimColor>
+            • {plugin.name}
+          </Text>)}
+        </Box>}
+        <Box marginTop={1}>
+          <Text>
+            Press <Text bold>y</Text> to confirm or <Text bold>n</Text> to
+            cancel
+          </Text>
         </Box>
-      </Box>;
+      </Box>
+    </Box>;
   }
 
   // Show marketplace details
@@ -599,79 +599,79 @@ export function ManageMarketplaces({
     const isUpdating = selectedMarketplace.pendingUpdate || isProcessing;
     const menuOptions = buildDetailsMenuOptions(selectedMarketplace);
     return <Box flexDirection="column">
-        <Text bold>{selectedMarketplace.name}</Text>
-        <Text dimColor>{selectedMarketplace.source}</Text>
-        <Box marginTop={1}>
-          <Text>
-            {selectedMarketplace.pluginCount || 0} available{' '}
-            {plural(selectedMarketplace.pluginCount || 0, 'plugin')}
-          </Text>
+      <Text bold>{selectedMarketplace.name}</Text>
+      <Text dimColor>{selectedMarketplace.source}</Text>
+      <Box marginTop={1}>
+        <Text>
+          {selectedMarketplace.pluginCount || 0} available{' '}
+          {plural(selectedMarketplace.pluginCount || 0, 'plugin')}
+        </Text>
+      </Box>
+
+      {/* Installed plugins section */}
+      {selectedMarketplace.installedPlugins && selectedMarketplace.installedPlugins.length > 0 && <Box flexDirection="column" marginTop={1}>
+        <Text bold>
+          Installed plugins ({selectedMarketplace.installedPlugins.length}
+          ):
+        </Text>
+        <Box flexDirection="column" marginLeft={1}>
+          {selectedMarketplace.installedPlugins.map(plugin => <Box key={plugin.name} flexDirection="row" gap={1}>
+            <Text>{figures.bullet}</Text>
+            <Box flexDirection="column">
+              <Text>{plugin.name}</Text>
+              <Text dimColor>{plugin.manifest.description}</Text>
+            </Box>
+          </Box>)}
         </Box>
+      </Box>}
 
-        {/* Installed plugins section */}
-        {selectedMarketplace.installedPlugins && selectedMarketplace.installedPlugins.length > 0 && <Box flexDirection="column" marginTop={1}>
-              <Text bold>
-                Installed plugins ({selectedMarketplace.installedPlugins.length}
-                ):
-              </Text>
-              <Box flexDirection="column" marginLeft={1}>
-                {selectedMarketplace.installedPlugins.map(plugin => <Box key={plugin.name} flexDirection="row" gap={1}>
-                    <Text>{figures.bullet}</Text>
-                    <Box flexDirection="column">
-                      <Text>{plugin.name}</Text>
-                      <Text dimColor>{plugin.manifest.description}</Text>
-                    </Box>
-                  </Box>)}
-              </Box>
-            </Box>}
+      {/* Processing indicator */}
+      {isUpdating && <Box marginTop={1} flexDirection="column">
+        <Text color="claude">Updating marketplace…</Text>
+        {progressMessage && <Text dimColor>{progressMessage}</Text>}
+      </Box>}
 
-        {/* Processing indicator */}
-        {isUpdating && <Box marginTop={1} flexDirection="column">
-            <Text color="claude">Updating marketplace…</Text>
-            {progressMessage && <Text dimColor>{progressMessage}</Text>}
-          </Box>}
+      {/* Success message */}
+      {!isUpdating && successMessage && <Box marginTop={1}>
+        <Text color="claude">{successMessage}</Text>
+      </Box>}
 
-        {/* Success message */}
-        {!isUpdating && successMessage && <Box marginTop={1}>
-            <Text color="claude">{successMessage}</Text>
-          </Box>}
+      {/* Error message */}
+      {!isUpdating && processError && <Box marginTop={1}>
+        <Text color="error">{processError}</Text>
+      </Box>}
 
-        {/* Error message */}
-        {!isUpdating && processError && <Box marginTop={1}>
-            <Text color="error">{processError}</Text>
-          </Box>}
-
-        {/* Menu options */}
-        {!isUpdating && <Box flexDirection="column" marginTop={1}>
-            {menuOptions.map((option, idx) => {
+      {/* Menu options */}
+      {!isUpdating && <Box flexDirection="column" marginTop={1}>
+        {menuOptions.map((option, idx) => {
           if (!option) return null;
           const isSelected = idx === detailsMenuIndex;
           return <Box key={option.value}>
-                  <Text color={isSelected ? 'suggestion' : undefined}>
-                    {isSelected ? figures.pointer : ' '} {option.label}
-                  </Text>
-                  {option.secondaryLabel && <Text dimColor> {option.secondaryLabel}</Text>}
-                </Box>;
+            <Text color={isSelected ? 'suggestion' : undefined}>
+              {isSelected ? figures.pointer : ' '} {option.label}
+            </Text>
+            {option.secondaryLabel && <Text dimColor> {option.secondaryLabel}</Text>}
+          </Box>;
         })}
-          </Box>}
+      </Box>}
 
-        {/* Show explanatory text at the bottom when auto-update is enabled */}
-        {!isUpdating && !shouldSkipPluginAutoupdate() && selectedMarketplace.autoUpdate && <Box marginTop={1}>
-              <Text dimColor>
-                Auto-update enabled. Claude Code will automatically update this
-                marketplace and its installed plugins.
-              </Text>
-            </Box>}
+      {/* Show explanatory text at the bottom when auto-update is enabled */}
+      {!isUpdating && !shouldSkipPluginAutoupdate() && selectedMarketplace.autoUpdate && <Box marginTop={1}>
+        <Text dimColor>
+          Auto-update enabled. Neuron will automatically update this
+          marketplace and its installed plugins.
+        </Text>
+      </Box>}
 
-        <Box marginLeft={3}>
-          <Text dimColor italic>
-            {isUpdating ? <>Please wait…</> : <Byline>
-                <ConfigurableShortcutHint action="select:accept" context="Select" fallback="Enter" description="select" />
-                <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="go back" />
-              </Byline>}
-          </Text>
-        </Box>
-      </Box>;
+      <Box marginLeft={3}>
+        <Text dimColor italic>
+          {isUpdating ? <>Please wait…</> : <Byline>
+            <ConfigurableShortcutHint action="select:accept" context="Select" fallback="Enter" description="select" />
+            <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="go back" />
+          </Byline>}
+        </Text>
+      </Box>
+    </Box>;
   }
 
   // Show marketplace list
@@ -680,23 +680,23 @@ export function ManageMarketplaces({
     removeCount
   } = getPendingCounts();
   return <Box flexDirection="column">
-      <Box marginBottom={1}>
-        <Text bold>Manage marketplaces</Text>
-      </Box>
+    <Box marginBottom={1}>
+      <Text bold>Manage marketplaces</Text>
+    </Box>
 
-      {/* Add Marketplace option */}
-      <Box flexDirection="row" gap={1} marginBottom={1}>
-        <Text color={selectedIndex === 0 ? 'suggestion' : undefined}>
-          {selectedIndex === 0 ? figures.pointer : ' '} +
-        </Text>
-        <Text bold color={selectedIndex === 0 ? 'suggestion' : undefined}>
-          Add Marketplace
-        </Text>
-      </Box>
+    {/* Add Marketplace option */}
+    <Box flexDirection="row" gap={1} marginBottom={1}>
+      <Text color={selectedIndex === 0 ? 'suggestion' : undefined}>
+        {selectedIndex === 0 ? figures.pointer : ' '} +
+      </Text>
+      <Text bold color={selectedIndex === 0 ? 'suggestion' : undefined}>
+        Add Marketplace
+      </Text>
+    </Box>
 
-      {/* Marketplace list */}
-      <Box flexDirection="column">
-        {marketplaceStates.map((state, idx) => {
+    {/* Marketplace list */}
+    <Box flexDirection="column">
+      {marketplaceStates.map((state, idx) => {
         const isSelected = idx + 1 === selectedIndex; // +1 because Add Marketplace is at index 0
 
         // Build status indicators
@@ -704,60 +704,60 @@ export function ManageMarketplaces({
         if (state.pendingUpdate) indicators.push('UPDATE');
         if (state.pendingRemove) indicators.push('REMOVE');
         return <Box key={state.name} flexDirection="row" gap={1} marginBottom={1}>
-              <Text color={isSelected ? 'suggestion' : undefined}>
-                {isSelected ? figures.pointer : ' '}{' '}
-                {state.pendingRemove ? figures.cross : figures.bullet}
-              </Text>
-              <Box flexDirection="column" flexGrow={1}>
-                <Box flexDirection="row" gap={1}>
-                  <Text bold strikethrough={state.pendingRemove} dimColor={state.pendingRemove}>
-                    {state.name === 'claude-plugins-official' && <Text color="claude">✻ </Text>}
-                    {state.name}
-                    {state.name === 'claude-plugins-official' && <Text color="claude"> ✻</Text>}
-                  </Text>
-                  {indicators.length > 0 && <Text color="warning">[{indicators.join(', ')}]</Text>}
-                </Box>
-                <Text dimColor>{state.source}</Text>
-                <Text dimColor>
-                  {state.pluginCount !== undefined && <>{state.pluginCount} available</>}
-                  {state.installedPlugins && state.installedPlugins.length > 0 && <> • {state.installedPlugins.length} installed</>}
-                  {state.lastUpdated && <>
-                      {' '}
-                      • Updated{' '}
-                      {new Date(state.lastUpdated).toLocaleDateString()}
-                    </>}
-                </Text>
-              </Box>
-            </Box>;
-      })}
-      </Box>
-
-      {/* Pending changes summary */}
-      {hasPendingChanges() && <Box marginTop={1} flexDirection="column">
-          <Text>
-            <Text bold>Pending changes:</Text>{' '}
-            <Text dimColor>Enter to apply</Text>
+          <Text color={isSelected ? 'suggestion' : undefined}>
+            {isSelected ? figures.pointer : ' '}{' '}
+            {state.pendingRemove ? figures.cross : figures.bullet}
           </Text>
-          {updateCount > 0 && <Text>
-              • Update {updateCount} {plural(updateCount, 'marketplace')}
-            </Text>}
-          {removeCount > 0 && <Text color="warning">
-              • Remove {removeCount} {plural(removeCount, 'marketplace')}
-            </Text>}
-        </Box>}
+          <Box flexDirection="column" flexGrow={1}>
+            <Box flexDirection="row" gap={1}>
+              <Text bold strikethrough={state.pendingRemove} dimColor={state.pendingRemove}>
+                {state.name === 'claude-plugins-official' && <Text color="claude">✻ </Text>}
+                {state.name}
+                {state.name === 'claude-plugins-official' && <Text color="claude"> ✻</Text>}
+              </Text>
+              {indicators.length > 0 && <Text color="warning">[{indicators.join(', ')}]</Text>}
+            </Box>
+            <Text dimColor>{state.source}</Text>
+            <Text dimColor>
+              {state.pluginCount !== undefined && <>{state.pluginCount} available</>}
+              {state.installedPlugins && state.installedPlugins.length > 0 && <> • {state.installedPlugins.length} installed</>}
+              {state.lastUpdated && <>
+                {' '}
+                • Updated{' '}
+                {new Date(state.lastUpdated).toLocaleDateString()}
+              </>}
+            </Text>
+          </Box>
+        </Box>;
+      })}
+    </Box>
 
-      {/* Processing indicator */}
-      {isProcessing && <Box marginTop={1}>
-          <Text color="claude">Processing changes…</Text>
-        </Box>}
+    {/* Pending changes summary */}
+    {hasPendingChanges() && <Box marginTop={1} flexDirection="column">
+      <Text>
+        <Text bold>Pending changes:</Text>{' '}
+        <Text dimColor>Enter to apply</Text>
+      </Text>
+      {updateCount > 0 && <Text>
+        • Update {updateCount} {plural(updateCount, 'marketplace')}
+      </Text>}
+      {removeCount > 0 && <Text color="warning">
+        • Remove {removeCount} {plural(removeCount, 'marketplace')}
+      </Text>}
+    </Box>}
 
-      {/* Error display */}
-      {processError && <Box marginTop={1}>
-          <Text color="error">{processError}</Text>
-        </Box>}
+    {/* Processing indicator */}
+    {isProcessing && <Box marginTop={1}>
+      <Text color="claude">Processing changes…</Text>
+    </Box>}
 
-      <ManageMarketplacesKeyHints exitState={exitState} hasPendingActions={hasPendingChanges()} />
-    </Box>;
+    {/* Error display */}
+    {processError && <Box marginTop={1}>
+      <Text color="error">{processError}</Text>
+    </Box>}
+
+    <ManageMarketplacesKeyHints exitState={exitState} hasPendingActions={hasPendingChanges()} />
+  </Box>;
 }
 type ManageMarketplacesKeyHintsProps = {
   exitState: Props['exitState'];

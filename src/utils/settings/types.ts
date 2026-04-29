@@ -77,11 +77,11 @@ export const PermissionsSchema = lazySchema(() =>
         ),
       ...(feature('TRANSCRIPT_CLASSIFIER')
         ? {
-            disableAutoMode: z
-              .enum(['disable'])
-              .optional()
-              .describe('Disable auto mode'),
-          }
+          disableAutoMode: z
+            .enum(['disable'])
+            .optional()
+            .describe('Disable auto mode'),
+        }
         : {}),
       additionalDirectories: z
         .array(z.string())
@@ -290,30 +290,30 @@ export const SettingsSchema = lazySchema(() =>
       // alive across env-var-off sessions — it's just not schema-validated then.
       ...(isEnvTruthy(process.env.CLAUDE_CODE_ENABLE_XAA)
         ? {
-            xaaIdp: z
-              .object({
-                issuer: z
-                  .string()
-                  .url()
-                  .describe('IdP issuer URL for OIDC discovery'),
-                clientId: z
-                  .string()
-                  .describe("Claude Code's client_id registered at the IdP"),
-                callbackPort: z
-                  .number()
-                  .int()
-                  .positive()
-                  .optional()
-                  .describe(
-                    'Fixed loopback callback port for the IdP OIDC login. ' +
-                      'Only needed if the IdP does not honor RFC 8252 port-any matching.',
-                  ),
-              })
-              .optional()
-              .describe(
-                'XAA (SEP-990) IdP connection. Configure once; all XAA-enabled MCP servers reuse this.',
-              ),
-          }
+          xaaIdp: z
+            .object({
+              issuer: z
+                .string()
+                .url()
+                .describe('IdP issuer URL for OIDC discovery'),
+              clientId: z
+                .string()
+                .describe("Neuron's client_id registered at the IdP"),
+              callbackPort: z
+                .number()
+                .int()
+                .positive()
+                .optional()
+                .describe(
+                  'Fixed loopback callback port for the IdP OIDC login. ' +
+                  'Only needed if the IdP does not honor RFC 8252 port-any matching.',
+                ),
+            })
+            .optional()
+            .describe(
+              'XAA (SEP-990) IdP connection. Configure once; all XAA-enabled MCP servers reuse this.',
+            ),
+        }
         : {}),
       fileSuggestion: z
         .object({
@@ -327,7 +327,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Whether file picker should respect .gitignore files (default: true). ' +
-            'Note: .ignore files are always respected.',
+          'Note: .ignore files are always respected.',
         ),
       cleanupPeriodDays: z
         .number()
@@ -348,27 +348,27 @@ export const SettingsSchema = lazySchema(() =>
             .optional()
             .describe(
               'Attribution text for git commits, including any trailers. ' +
-                'Empty string hides attribution.',
+              'Empty string hides attribution.',
             ),
           pr: z
             .string()
             .optional()
             .describe(
               'Attribution text for pull request descriptions. ' +
-                'Empty string hides attribution.',
+              'Empty string hides attribution.',
             ),
         })
         .optional()
         .describe(
           'Customize attribution text for commits and PRs. ' +
-            'Each field defaults to the standard Claude Code attribution if not set.',
+          'Each field defaults to the standard Claude Code attribution if not set.',
         ),
       includeCoAuthoredBy: z
         .boolean()
         .optional()
         .describe(
           'Deprecated: Use attribution instead. ' +
-            "Whether to include Claude's co-authored by attribution in commits and PRs (defaults to true)",
+          "Whether to include Claude's co-authored by attribution in commits and PRs (defaults to true)",
         ),
       includeGitInstructions: z
         .boolean()
@@ -389,19 +389,19 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Allowlist of models that users can select. ' +
-            'Accepts family aliases ("opus" allows any opus version), ' +
-            'version prefixes ("opus-4-5" allows only that version), ' +
-            'and full model IDs. ' +
-            'If undefined, all models are available. If empty array, only the default model is available. ' +
-            'Typically set in managed settings by enterprise administrators.',
+          'Accepts family aliases ("opus" allows any opus version), ' +
+          'version prefixes ("opus-4-5" allows only that version), ' +
+          'and full model IDs. ' +
+          'If undefined, all models are available. If empty array, only the default model is available. ' +
+          'Typically set in managed settings by enterprise administrators.',
         ),
       modelOverrides: z
         .record(z.string(), z.string())
         .optional()
         .describe(
           'Override mapping from Anthropic model ID (e.g. "claude-opus-4-6") to provider-specific ' +
-            'model ID (e.g. a Bedrock inference profile ARN). Typically set in managed settings by ' +
-            'enterprise administrators.',
+          'model ID (e.g. a Bedrock inference profile ARN). Typically set in managed settings by ' +
+          'enterprise administrators.',
         ),
       // Whether to automatically approve all MCP servers in the project
       enableAllProjectMcpServers: z
@@ -426,9 +426,9 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Enterprise allowlist of MCP servers that can be used. ' +
-            'Applies to all scopes including enterprise servers from managed-mcp.json. ' +
-            'If undefined, all servers are allowed. If empty array, no servers are allowed. ' +
-            'Denylist takes precedence - if a server is on both lists, it is denied.',
+          'Applies to all scopes including enterprise servers from managed-mcp.json. ' +
+          'If undefined, all servers are allowed. If empty array, no servers are allowed. ' +
+          'Denylist takes precedence - if a server is on both lists, it is denied.',
         ),
       // Enterprise denylist of MCP servers
       deniedMcpServers: z
@@ -436,8 +436,8 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Enterprise denylist of MCP servers that are explicitly blocked. ' +
-            'If a server is on the denylist, it will be blocked across all scopes including enterprise. ' +
-            'Denylist takes precedence over allowlist - if a server is on both lists, it is denied.',
+          'If a server is on the denylist, it will be blocked across all scopes including enterprise. ' +
+          'Denylist takes precedence over allowlist - if a server is on both lists, it is denied.',
         ),
       hooks: HooksSchema()
         .optional()
@@ -455,15 +455,15 @@ export const SettingsSchema = lazySchema(() =>
             .optional()
             .describe(
               'Directories to symlink from main repository to worktrees to avoid disk bloat. ' +
-                'Must be explicitly configured - no directories are symlinked by default. ' +
-                'Common examples: "node_modules", ".cache", ".bin"',
+              'Must be explicitly configured - no directories are symlinked by default. ' +
+              'Common examples: "node_modules", ".cache", ".bin"',
             ),
           sparsePaths: z
             .array(z.string())
             .optional()
             .describe(
               'Directories to include when creating worktrees, via git sparse-checkout (cone mode). ' +
-                'Dramatically faster in large monorepos — only the listed paths are written to disk.',
+              'Dramatically faster in large monorepos — only the listed paths are written to disk.',
             ),
         })
         .optional()
@@ -479,7 +479,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Default shell for input-box ! commands. ' +
-            "Defaults to 'bash' on all platforms (no Windows auto-flip).",
+          "Defaults to 'bash' on all platforms (no Windows auto-flip).",
         ),
       // Only run hooks defined in managed settings (managed-settings.json)
       allowManagedHooksOnly: z
@@ -487,7 +487,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'When true (and set in managed settings), only hooks from managed settings run. ' +
-            'User, project, and local hooks are ignored.',
+          'User, project, and local hooks are ignored.',
         ),
       // Allowlist of URL patterns HTTP hooks may target (follows allowedMcpServers precedent)
       allowedHttpHookUrls: z
@@ -495,10 +495,10 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Allowlist of URL patterns that HTTP hooks may target. ' +
-            'Supports * as a wildcard (e.g. "https://hooks.example.com/*"). ' +
-            'When set, HTTP hooks with non-matching URLs are blocked. ' +
-            'If undefined, all URLs are allowed. If empty array, no HTTP hooks are allowed. ' +
-            'Arrays merge across settings sources (same semantics as allowedMcpServers).',
+          'Supports * as a wildcard (e.g. "https://hooks.example.com/*"). ' +
+          'When set, HTTP hooks with non-matching URLs are blocked. ' +
+          'If undefined, all URLs are allowed. If empty array, no HTTP hooks are allowed. ' +
+          'Arrays merge across settings sources (same semantics as allowedMcpServers).',
         ),
       // Allowlist of env var names HTTP hooks may interpolate into headers
       httpHookAllowedEnvVars: z
@@ -506,9 +506,9 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Allowlist of environment variable names HTTP hooks may interpolate into headers. ' +
-            "When set, each hook's effective allowedEnvVars is the intersection with this list. " +
-            'If undefined, no restriction is applied. ' +
-            'Arrays merge across settings sources (same semantics as allowedMcpServers).',
+          "When set, each hook's effective allowedEnvVars is the intersection with this list. " +
+          'If undefined, no restriction is applied. ' +
+          'Arrays merge across settings sources (same semantics as allowedMcpServers).',
         ),
       // Only use permission rules defined in managed settings (managed-settings.json)
       allowManagedPermissionRulesOnly: z
@@ -516,7 +516,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'When true (and set in managed settings), only permission rules (allow/deny/ask) from managed settings are respected. ' +
-            'User, project, local, and CLI argument permission rules are ignored.',
+          'User, project, local, and CLI argument permission rules are ignored.',
         ),
       // Only read MCP allowlist policy from managed settings
       allowManagedMcpServersOnly: z
@@ -524,8 +524,8 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'When true (and set in managed settings), allowedMcpServers is only read from managed settings. ' +
-            'deniedMcpServers still merges from all sources, so users can deny servers for themselves. ' +
-            'Users can still add their own MCP servers, but only the admin-defined allowlist applies.',
+          'deniedMcpServers still merges from all sources, so users can deny servers for themselves. ' +
+          'Users can still add their own MCP servers, but only the admin-defined allowlist applies.',
         ),
       // Force customizations through plugins only (LinkedIn ask via GTM)
       strictPluginOnlyCustomization: z
@@ -539,8 +539,8 @@ export const SettingsSchema = lazySchema(() =>
           v =>
             Array.isArray(v)
               ? v.filter(x =>
-                  (CUSTOMIZATION_SURFACES as readonly string[]).includes(x),
-                )
+                (CUSTOMIZATION_SURFACES as readonly string[]).includes(x),
+              )
               : v,
           z.union([z.boolean(), z.array(z.enum(CUSTOMIZATION_SURFACES))]),
         )
@@ -553,11 +553,11 @@ export const SettingsSchema = lazySchema(() =>
         .catch(undefined)
         .describe(
           'When set in managed settings, blocks non-plugin customization sources for the listed surfaces. ' +
-            'Array form locks specific surfaces (e.g. ["skills", "hooks"]); `true` locks all four; `false` is an explicit no-op. ' +
-            'Blocked: ~/.claude/{surface}/, .claude/{surface}/ (project), settings.json hooks, .mcp.json. ' +
-            'NOT blocked: managed (policySettings) sources, plugin-provided customizations. ' +
-            'Composes with strictKnownMarketplaces for end-to-end admin control — plugins gated by ' +
-            'marketplace allowlist, everything else blocked here.',
+          'Array form locks specific surfaces (e.g. ["skills", "hooks"]); `true` locks all four; `false` is an explicit no-op. ' +
+          'Blocked: ~/.claude/{surface}/, .claude/{surface}/ (project), settings.json hooks, .mcp.json. ' +
+          'NOT blocked: managed (policySettings) sources, plugin-provided customizations. ' +
+          'Composes with strictKnownMarketplaces for end-to-end admin control — plugins gated by ' +
+          'marketplace allowlist, everything else blocked here.',
         ),
       // Status line for custom status line display
       statusLine: z
@@ -618,10 +618,10 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Enterprise strict list of allowed marketplace sources. When set in managed settings, ' +
-            'ONLY these exact sources can be added as marketplaces. The check happens BEFORE ' +
-            'downloading, so blocked sources never touch the filesystem. ' +
-            'Note: this is a policy gate only — it does NOT register marketplaces. ' +
-            'To pre-register allowed marketplaces for users, also set extraKnownMarketplaces.',
+          'ONLY these exact sources can be added as marketplaces. The check happens BEFORE ' +
+          'downloading, so blocked sources never touch the filesystem. ' +
+          'Note: this is a policy gate only — it does NOT register marketplaces. ' +
+          'To pre-register allowed marketplaces for users, also set extraKnownMarketplaces.',
         ),
       // Enterprise blocklist of marketplace sources (policy settings only)
       // When set, these exact sources are blocked. Check happens BEFORE download.
@@ -630,8 +630,8 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Enterprise blocklist of marketplace sources. When set in managed settings, ' +
-            'these exact sources are blocked from being added as marketplaces. The check happens BEFORE ' +
-            'downloading, so blocked sources never touch the filesystem.',
+          'these exact sources are blocked from being added as marketplaces. The check happens BEFORE ' +
+          'downloading, so blocked sources never touch the filesystem.',
         ),
       // Force a specific login method: 'claudeai' for Claude Pro/Max, 'console' for Console billing
       forceLoginMethod: z
@@ -715,7 +715,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'When false, thinking is disabled. When absent or true, thinking is ' +
-            'enabled automatically for supported models.',
+          'enabled automatically for supported models.',
         ),
       effortLevel: z
         .enum(['low', 'medium', 'high', 'max'])
@@ -737,15 +737,15 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Map of model name to provider connection info. ' +
-            'Example: { "deepseek-chat": { "base_url": "https://api.deepseek.com/v1", "api_key": "sk-xxx" } }',
+          'Example: { "deepseek-chat": { "base_url": "https://api.deepseek.com/v1", "api_key": "sk-xxx" } }',
         ),
       agentRouting: z
         .record(z.string(), z.string())
         .optional()
         .describe(
           'Map of agent identifier (subagent_type or team member name) to model name. ' +
-            'Use "default" key as fallback. Model name must exist in agentModels. ' +
-            'Example: { "Explore": "deepseek-chat", "general-purpose": "gpt-4o", "default": "gpt-4o" }',
+          'Use "default" key as fallback. Model name must exist in agentModels. ' +
+          'Example: { "Explore": "deepseek-chat", "general-purpose": "gpt-4o", "default": "gpt-4o" }',
         ),
       fastMode: z
         .boolean()
@@ -764,7 +764,7 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'When false, prompt suggestions are disabled. When absent or true, ' +
-            'prompt suggestions are enabled.',
+          'prompt suggestions are enabled.',
         ),
       showClearContextOnPlanAccept: z
         .boolean()
@@ -777,7 +777,19 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Name of an agent (built-in or custom) to use for the main thread. ' +
-            "Applies the agent's system prompt, tool restrictions, and model.",
+          "Applies the agent's system prompt, tool restrictions, and model.",
+        ),
+      userName: z
+        .string()
+        .optional()
+        .describe(
+          'Preferred name for the current user. Used for personalized welcome copy and natural replies.',
+        ),
+      assistantName: z
+        .string()
+        .optional()
+        .describe(
+          'Preferred display and conversational name for the assistant.',
         ),
       companyAnnouncements: z
         .array(z.string())
@@ -841,13 +853,13 @@ export const SettingsSchema = lazySchema(() =>
         .describe('Release channel for auto-updates (latest or stable)'),
       ...(feature('LODESTONE')
         ? {
-            disableDeepLinkRegistration: z
-              .enum(['disable'])
-              .optional()
-              .describe(
-                'Prevent claude-cli:// protocol handler registration with the OS',
-              ),
-          }
+          disableDeepLinkRegistration: z
+            .enum(['disable'])
+            .optional()
+            .describe(
+              'Prevent claude-cli:// protocol handler registration with the OS',
+            ),
+        }
         : {}),
       minimumVersion: z
         .string()
@@ -860,64 +872,58 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Custom directory for plan files, relative to project root. ' +
-            'If not set, defaults to ~/.claude/plans/',
+          'If not set, defaults to ~/.claude/plans/',
         ),
       ...(process.env.USER_TYPE === 'ant'
         ? {
-            classifierPermissionsEnabled: z
-              .boolean()
-              .optional()
-              .describe(
-                'Enable AI-based classification for Bash(prompt:...) permission rules',
-              ),
-          }
+          classifierPermissionsEnabled: z
+            .boolean()
+            .optional()
+            .describe(
+              'Enable AI-based classification for Bash(prompt:...) permission rules',
+            ),
+        }
         : {}),
       ...(feature('PROACTIVE') || feature('KAIROS')
         ? {
-            minSleepDurationMs: z
-              .number()
-              .nonnegative()
-              .int()
-              .optional()
-              .describe(
-                'Minimum duration in milliseconds that the Sleep tool must sleep for. ' +
-                  'Useful for throttling proactive tick frequency.',
-              ),
-            maxSleepDurationMs: z
-              .number()
-              .int()
-              .min(-1)
-              .optional()
-              .describe(
-                'Maximum duration in milliseconds that the Sleep tool can sleep for. ' +
-                  'Set to -1 for indefinite sleep (waits for user input). ' +
-                  'Useful for limiting idle time in remote/managed environments.',
-              ),
-          }
+          minSleepDurationMs: z
+            .number()
+            .nonnegative()
+            .int()
+            .optional()
+            .describe(
+              'Minimum duration in milliseconds that the Sleep tool must sleep for. ' +
+              'Useful for throttling proactive tick frequency.',
+            ),
+          maxSleepDurationMs: z
+            .number()
+            .int()
+            .min(-1)
+            .optional()
+            .describe(
+              'Maximum duration in milliseconds that the Sleep tool can sleep for. ' +
+              'Set to -1 for indefinite sleep (waits for user input). ' +
+              'Useful for limiting idle time in remote/managed environments.',
+            ),
+        }
         : {}),
       ...(feature('VOICE_MODE')
         ? {
-            voiceEnabled: z
-              .boolean()
-              .optional()
-              .describe('Enable voice mode (hold-to-talk dictation)'),
-          }
+          voiceEnabled: z
+            .boolean()
+            .optional()
+            .describe('Enable voice mode (hold-to-talk dictation)'),
+        }
         : {}),
       ...(feature('KAIROS')
         ? {
-            assistant: z
-              .boolean()
-              .optional()
-              .describe(
-                'Start Claude in assistant mode (custom system prompt, brief view, scheduled check-in skills)',
-              ),
-            assistantName: z
-              .string()
-              .optional()
-              .describe(
-                'Display name for the assistant, shown in the claude.ai session list',
-              ),
-          }
+          assistant: z
+            .boolean()
+            .optional()
+            .describe(
+              'Start Claude in assistant mode (custom system prompt, brief view, scheduled check-in skills)',
+            ),
+        }
         : {}),
       // Teams/Enterprise opt-IN for channel notifications. Default OFF.
       // MCP servers that declare the claude/channel capability can push
@@ -932,8 +938,8 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Teams/Enterprise opt-in for channel notifications (MCP servers with the ' +
-            'claude/channel capability pushing inbound messages). Default off. ' +
-            'Set true to allow; users then select servers via --channels.',
+          'claude/channel capability pushing inbound messages). Default off. ' +
+          'Set true to allow; users then select servers via --channels.',
         ),
       // Org-level channel plugin allowlist. When set, REPLACES the
       // Anthropic ledger — admin owns the trust decision. Undefined means
@@ -949,19 +955,19 @@ export const SettingsSchema = lazySchema(() =>
         .optional()
         .describe(
           'Teams/Enterprise allowlist of channel plugins. When set, ' +
-            'replaces the default Anthropic allowlist — admins decide which ' +
-            'plugins may push inbound messages. Undefined falls back to the default. ' +
-            'Requires channelsEnabled: true.',
+          'replaces the default Anthropic allowlist — admins decide which ' +
+          'plugins may push inbound messages. Undefined falls back to the default. ' +
+          'Requires channelsEnabled: true.',
         ),
       ...(feature('KAIROS') || feature('KAIROS_BRIEF')
         ? {
-            defaultView: z
-              .enum(['chat', 'transcript'])
-              .optional()
-              .describe(
-                'Default transcript view: chat (SendUserMessage checkpoints only) or transcript (full)',
-              ),
-          }
+          defaultView: z
+            .enum(['chat', 'transcript'])
+            .optional()
+            .describe(
+              'Default transcript view: chat (SendUserMessage checkpoints only) or transcript (full)',
+            ),
+        }
         : {}),
       prefersReducedMotion: z
         .boolean()
@@ -973,7 +979,7 @@ export const SettingsSchema = lazySchema(() =>
         .boolean()
         .optional()
         .describe(
-          'Enable auto-memory for this project. When false, Claude will not read from or write to the auto-memory directory.',
+          'Enable auto-memory for this project. When false, Neuron will not read from or write to the auto-memory directory.',
         ),
       autoMemoryDirectory: z
         .string()
@@ -1001,44 +1007,44 @@ export const SettingsSchema = lazySchema(() =>
         ),
       ...(feature('TRANSCRIPT_CLASSIFIER')
         ? {
-            skipAutoPermissionPrompt: z
-              .boolean()
-              .optional()
-              .describe(
-                'Whether the user has accepted the auto mode opt-in dialog',
-              ),
-            useAutoModeDuringPlan: z
-              .boolean()
-              .optional()
-              .describe(
-                'Whether plan mode uses auto mode semantics when auto mode is available (default: true)',
-              ),
-            autoMode: z
-              .object({
-                allow: z
-                  .array(z.string())
-                  .optional()
-                  .describe('Rules for the auto mode classifier allow section'),
-                soft_deny: z
-                  .array(z.string())
-                  .optional()
-                  .describe('Rules for the auto mode classifier deny section'),
-                ...(process.env.USER_TYPE === 'ant'
-                  ? {
-                      // Back-compat alias for ant users; external users use soft_deny
-                      deny: z.array(z.string()).optional(),
-                    }
-                  : {}),
-                environment: z
-                  .array(z.string())
-                  .optional()
-                  .describe(
-                    'Entries for the auto mode classifier environment section',
-                  ),
-              })
-              .optional()
-              .describe('Auto mode classifier prompt customization'),
-          }
+          skipAutoPermissionPrompt: z
+            .boolean()
+            .optional()
+            .describe(
+              'Whether the user has accepted the auto mode opt-in dialog',
+            ),
+          useAutoModeDuringPlan: z
+            .boolean()
+            .optional()
+            .describe(
+              'Whether plan mode uses auto mode semantics when auto mode is available (default: true)',
+            ),
+          autoMode: z
+            .object({
+              allow: z
+                .array(z.string())
+                .optional()
+                .describe('Rules for the auto mode classifier allow section'),
+              soft_deny: z
+                .array(z.string())
+                .optional()
+                .describe('Rules for the auto mode classifier deny section'),
+              ...(process.env.USER_TYPE === 'ant'
+                ? {
+                  // Back-compat alias for ant users; external users use soft_deny
+                  deny: z.array(z.string()).optional(),
+                }
+                : {}),
+              environment: z
+                .array(z.string())
+                .optional()
+                .describe(
+                  'Entries for the auto mode classifier environment section',
+                ),
+            })
+            .optional()
+            .describe('Auto mode classifier prompt customization'),
+        }
         : {}),
       disableAutoMode: z
         .enum(['disable'])
@@ -1072,35 +1078,35 @@ export const SettingsSchema = lazySchema(() =>
               .optional()
               .describe(
                 'Default working directory on the remote host. ' +
-                  'Supports tilde expansion (e.g. ~/projects). ' +
-                  'If not specified, defaults to the remote user home directory. ' +
-                  'Can be overridden by the [dir] positional argument in `claude ssh <config> [dir]`.',
+                'Supports tilde expansion (e.g. ~/projects). ' +
+                'If not specified, defaults to the remote user home directory. ' +
+                'Can be overridden by the [dir] positional argument in `claude ssh <config> [dir]`.',
               ),
           }),
         )
         .optional()
         .describe(
           'SSH connection configurations for remote environments. ' +
-            'Typically set in managed settings by enterprise administrators ' +
-            'to pre-configure SSH connections for team members.',
+          'Typically set in managed settings by enterprise administrators ' +
+          'to pre-configure SSH connections for team members.',
         ),
       claudeMdExcludes: z
         .array(z.string())
         .optional()
         .describe(
           'Glob patterns or absolute paths of AGENTS.md/CLAUDE.md files to exclude from loading. ' +
-            'Patterns are matched against absolute file paths using picomatch. ' +
-            'Only applies to User, Project, and Local memory types (Managed/policy files cannot be excluded). ' +
-            'Examples: "/home/user/monorepo/AGENTS.md", "**/code/CLAUDE.md", "**/some-dir/.claude/rules/**"',
+          'Patterns are matched against absolute file paths using picomatch. ' +
+          'Only applies to User, Project, and Local memory types (Managed/policy files cannot be excluded). ' +
+          'Examples: "/home/user/monorepo/AGENTS.md", "**/code/CLAUDE.md", "**/some-dir/.claude/rules/**"',
         ),
       pluginTrustMessage: z
         .string()
         .optional()
         .describe(
           'Custom message to append to the plugin trust warning shown before installation. ' +
-            'Only read from policy settings (managed-settings.json / MDM). ' +
-            'Useful for enterprise administrators to add organization-specific context ' +
-            '(e.g., "All plugins from our internal marketplace are vetted and approved.").',
+          'Only read from policy settings (managed-settings.json / MDM). ' +
+          'Useful for enterprise administrators to add organization-specific context ' +
+          '(e.g., "All plugins from our internal marketplace are vetted and approved.").',
         ),
     })
     .passthrough(),

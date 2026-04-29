@@ -127,7 +127,7 @@ export async function findSuitableShell(): Promise<string> {
   // If no valid shell found, throw a helpful error
   if (!shellPath) {
     const errorMsg =
-      'No suitable shell found. Claude CLI requires a Posix shell environment. ' +
+      'No suitable shell found. Neuron requires a Posix shell environment. ' +
       'Please ensure you have a valid shell installed and the SHELL environment variable set.'
     logError(new Error(errorMsg))
     throw new Error(errorMsg)
@@ -244,7 +244,7 @@ export async function exec(
       cwd = fallback
     } else {
       return createFailedCommand(
-        `Working directory "${cwd}" is no longer a valid directory. Please restart Claude from an existing directory.`,
+        `Working directory "${cwd}" is no longer a valid directory. Please restart Neuron from an existing directory.`,
       )
     }
   }

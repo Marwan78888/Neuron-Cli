@@ -642,7 +642,7 @@ export function checkPathSafetyForAutoEdit(
     if (hasSuspiciousWindowsPathPattern(pathToCheck)) {
       return {
         safe: false,
-        message: `Claude requested permissions to write to ${path}, which contains a suspicious Windows path pattern that requires manual approval.`,
+        message: `Neuron requested permissions to write to ${path}, which contains a suspicious Windows path pattern that requires manual approval.`,
         classifierApprovable: false,
       }
     }
@@ -653,7 +653,7 @@ export function checkPathSafetyForAutoEdit(
     if (isClaudeConfigFilePath(pathToCheck)) {
       return {
         safe: false,
-        message: `Claude requested permissions to write to ${path}, but you haven't granted it yet.`,
+        message: `Neuron requested permissions to write to ${path}, but you haven't granted it yet.`,
         classifierApprovable: true,
       }
     }
@@ -664,7 +664,7 @@ export function checkPathSafetyForAutoEdit(
     if (isDangerousFilePathToAutoEdit(pathToCheck)) {
       return {
         safe: false,
-        message: `Claude requested permissions to edit ${path} which is a sensitive file.`,
+        message: `Neuron requested permissions to edit ${path} which is a sensitive file.`,
         classifierApprovable: true,
       }
     }
@@ -1045,7 +1045,7 @@ export function checkReadPermissionForTool(
   if (typeof tool.getPath !== 'function') {
     return {
       behavior: 'ask',
-      message: `Claude requested permissions to use ${tool.name}, but you haven't granted it yet.`,
+      message: `Neuron requested permissions to use ${tool.name}, but you haven't granted it yet.`,
     }
   }
   const path = tool.getPath(input)
@@ -1064,7 +1064,7 @@ export function checkReadPermissionForTool(
     if (pathToCheck.startsWith('\\\\') || pathToCheck.startsWith('//')) {
       return {
         behavior: 'ask',
-        message: `Claude requested permissions to read from ${path}, which appears to be a UNC path that could access network resources.`,
+        message: `Neuron requested permissions to read from ${path}, which appears to be a UNC path that could access network resources.`,
         decisionReason: {
           type: 'other',
           reason: 'UNC path detected (defense-in-depth check)',
@@ -1078,7 +1078,7 @@ export function checkReadPermissionForTool(
     if (hasSuspiciousWindowsPathPattern(pathToCheck)) {
       return {
         behavior: 'ask',
-        message: `Claude requested permissions to read from ${path}, which contains a suspicious Windows path pattern that requires manual approval.`,
+        message: `Neuron requested permissions to read from ${path}, which contains a suspicious Windows path pattern that requires manual approval.`,
         decisionReason: {
           type: 'other',
           reason:
@@ -1122,7 +1122,7 @@ export function checkReadPermissionForTool(
     if (askRule) {
       return {
         behavior: 'ask',
-        message: `Claude requested permissions to read from ${path}, but you haven't granted it yet.`,
+        message: `Neuron requested permissions to read from ${path}, but you haven't granted it yet.`,
         decisionReason: {
           type: 'rule',
           rule: askRule,
@@ -1189,7 +1189,7 @@ export function checkReadPermissionForTool(
   // At this point, isInWorkingDir is false (from step #6), so path is outside working directories
   return {
     behavior: 'ask',
-    message: `Claude requested permissions to read from ${path}, but you haven't granted it yet.`,
+    message: `Neuron requested permissions to read from ${path}, but you haven't granted it yet.`,
     suggestions: generateSuggestions(
       path,
       'read',
@@ -1221,7 +1221,7 @@ export function checkWritePermissionForTool<Input extends AnyObject>(
   if (typeof tool.getPath !== 'function') {
     return {
       behavior: 'ask',
-      message: `Claude requested permissions to use ${tool.name}, but you haven't granted it yet.`,
+      message: `Neuron requested permissions to use ${tool.name}, but you haven't granted it yet.`,
     }
   }
   const path = tool.getPath(input)
@@ -1358,7 +1358,7 @@ export function checkWritePermissionForTool<Input extends AnyObject>(
     if (askRule) {
       return {
         behavior: 'ask',
-        message: `Claude requested permissions to write to ${path}, but you haven't granted it yet.`,
+        message: `Neuron requested permissions to write to ${path}, but you haven't granted it yet.`,
         decisionReason: {
           type: 'rule',
           rule: askRule,
@@ -1405,7 +1405,7 @@ export function checkWritePermissionForTool<Input extends AnyObject>(
   // 5. Default to asking for permission
   return {
     behavior: 'ask',
-    message: `Claude requested permissions to write to ${path}, but you haven't granted it yet.`,
+    message: `Neuron requested permissions to write to ${path}, but you haven't granted it yet.`,
     suggestions: generateSuggestions(
       path,
       'write',

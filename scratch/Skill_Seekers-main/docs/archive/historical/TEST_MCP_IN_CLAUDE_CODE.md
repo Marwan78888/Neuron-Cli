@@ -339,4 +339,4 @@ Once MCP integration works:
 
 ---
 
-**Important:** This document is for testing the **actual MCP protocol integration** with Claude Code, not just the Python functions. Make sure you're testing through Claude Code's UI, not Python scripts!
+**Important:** This document is for testing the **actual MCP protocol integration** with Claude Code, not just the Python functions. Make sure you're testing through Neuron UI, not Python scripts!

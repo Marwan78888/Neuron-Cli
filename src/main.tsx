@@ -50,7 +50,7 @@ import { isAgentSwarmsEnabled } from './utils/agentSwarmsEnabled.js';
 import { count, uniq } from './utils/array.js';
 import { installAsciicastRecorder } from './utils/asciicast.js';
 import { getSubscriptionType, isClaudeAISubscriber, prefetchAwsCredentialsAndBedRockInfoIfSafe, prefetchGcpCredentialsIfSafe, validateForceLoginOrg } from './utils/auth.js';
-import { checkHasTrustDialogAccepted, getGlobalConfig, getRemoteControlAtStartup, isAutoUpdaterDisabled, saveGlobalConfig } from './utils/config.js';
+import { checkHasTrustDialogAccepted, getGlobalConfig, getRemoteControlAtStartup, isAutoUpdaterDisabled, saveCurrentProjectConfig, saveGlobalConfig } from './utils/config.js';
 import { seedEarlyInput, stopCapturingEarlyInput } from './utils/earlyInput.js';
 import { getInitialEffortSetting, parseEffortValue } from './utils/effort.js';
 import { getInitialFastModeSetting, isFastModeEnabled, prefetchFastModeStatus, resolveFastModeStatusFromCache } from './utils/fastMode.js';
@@ -2794,7 +2794,7 @@ async function run(): Promise<CommanderCommand> {
         })]);
         if (claudeaiTimer) clearTimeout(claudeaiTimer);
         if (claudeaiTimedOut) {
-          logForDebugging(`[MCP] claude.ai connectors not ready after ${CLAUDE_AI_MCP_TIMEOUT_MS}ms — proceeding; background connection continues`);
+          logForDebugging(`[MCP] neuron connectors not ready after ${CLAUDE_AI_MCP_TIMEOUT_MS}ms — proceeding; background connection continues`);
         }
         profileCheckpoint('after_connectMcp_claudeai');
 
@@ -4260,6 +4260,38 @@ async function run(): Promise<CommanderCommand> {
     await setupTokenHandler(root);
   });
 
+  program.command('onboarding').alias('restart-onboarding').description('Restart first-run onboarding from zero, then exit').action(async () => {
+    saveGlobalConfig(current => ({
+      ...current,
+      hasCompletedOnboarding: false,
+      lastOnboardingVersion: undefined
+    }));
+    saveCurrentProjectConfig(current => ({
+      ...current,
+      hasCompletedProjectOnboarding: false,
+      projectOnboardingSeenCount: 0
+    }));
+    const [{
+      createRoot
+    }, {
+      Onboarding
+    }, {
+      completeOnboarding,
+      showSetupDialog
+    }, {
+      onChangeAppState
+    }] = await Promise.all([import('./ink.js'), import('./components/Onboarding.js'), import('./interactiveHelpers.js'), import('./state/onChangeAppState.js')]);
+    const root = await createRoot(getBaseRenderOptions(false));
+    await showSetupDialog(root, done => <Onboarding onDone={() => {
+      completeOnboarding();
+      done();
+    }} />, {
+      onChangeAppState
+    });
+    root.unmount();
+    process.exit(0);
+  });
+
   // Agents command - list configured agents
   program.command('agents').description('List configured agents').option('--setting-sources <sources>', 'Comma-separated list of setting sources to load (user, project, local).').action(async () => {
     const {
@@ -4363,7 +4395,7 @@ async function run(): Promise<CommanderCommand> {
 
   // claude up — run the project's CLAUDE.md "# claude up" setup instructions.
   if ("external" === 'ant') {
-    program.command('up').description('[internal-only] Initialize or upgrade the local dev environment using the "# claude up" section of the nearest CLAUDE.md').action(async () => {
+    program.command('up').description('[internal-only] Initialize or upgrade the local dev environment using the "# Neuron up" section of the nearest CLAUDE.md').action(async () => {
       const {
         up
       } = await import('src/cli/up.js');

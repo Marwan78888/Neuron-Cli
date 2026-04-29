@@ -18,11 +18,11 @@ Skills use Claude Code tool names. When you encounter these in a skill, use your
 
 ## No subagent support
 
-Gemini CLI has no equivalent to Claude Code's `Task` tool. Skills that rely on subagent dispatch (`subagent-driven-development`, `dispatching-parallel-agents`) will fall back to single-session execution via `executing-plans`.
+Gemini CLI has no equivalent to Neuron's `Task` tool. Skills that rely on subagent dispatch (`subagent-driven-development`, `dispatching-parallel-agents`) will fall back to single-session execution via `executing-plans`.
 
 ## Additional Gemini CLI tools
 
-These tools are available in Gemini CLI but have no Claude Code equivalent:
+These tools are available in Gemini CLI but have no Neuron equivalent:
 
 | Tool | Purpose |
 |------|---------|

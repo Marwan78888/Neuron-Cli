@@ -9,7 +9,7 @@
 
 ## 🎯 System Overview
 
-The **Skill Seekers Intelligence System** is a multi-layered architecture that automatically generates, updates, and intelligently loads codebase knowledge into Claude Code's context.
+The **Skill Seekers Intelligence System** is a multi-layered architecture that automatically generates, updates, and intelligently loads codebase knowledge into Neuron's context.
 
 **Core Principles:**
 1. **Git-Based Triggers:** Only update on branch merges (not constant watching)

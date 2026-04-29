@@ -528,7 +528,7 @@ export const WebSearchTool = buildTool({
   maxResultSizeChars: 100_000,
   shouldDefer: true,
   async description(input) {
-    return `Claude wants to search the web for: ${input.query}`
+    return `neuron wants to search the web for: ${input.query}`
   },
   userFacingName() {
     return 'Web Search'
@@ -677,8 +677,8 @@ export const WebSearchTool = buildTool({
           const errMsg = err instanceof Error ? err.message : String(err)
           throw new Error(
             `Web search is unavailable for provider "${provider}". ` +
-              `The search adapter failed (${errMsg}). ` +
-              `Try switching to a provider with built-in web search (e.g. Anthropic, Codex) or try again later.`,
+            `The search adapter failed (${errMsg}). ` +
+            `Try switching to a provider with built-in web search (e.g. Anthropic, Codex) or try again later.`,
           )
         }
         console.error(
@@ -841,25 +841,25 @@ export const WebSearchTool = buildTool({
 
     let formattedOutput = `Web search results for query: "${query}"\n\n`
 
-    // Process the results array - it can contain both string summaries and search result objects.
-    // Guard against null/undefined entries that can appear after JSON round-tripping
-    // (e.g., from compaction or transcript deserialization).
-    ;(results ?? []).forEach(result => {
-      if (result == null) {
-        return
-      }
-      if (typeof result === 'string') {
-        // Text summary
-        formattedOutput += result + '\n\n'
-      } else {
-        // Search result with links
-        if (result.content?.length > 0) {
-          formattedOutput += `Links: ${jsonStringify(result.content)}\n\n`
-        } else {
-          formattedOutput += 'No links found.\n\n'
+      // Process the results array - it can contain both string summaries and search result objects.
+      // Guard against null/undefined entries that can appear after JSON round-tripping
+      // (e.g., from compaction or transcript deserialization).
+      ; (results ?? []).forEach(result => {
+        if (result == null) {
+          return
         }
-      }
-    })
+        if (typeof result === 'string') {
+          // Text summary
+          formattedOutput += result + '\n\n'
+        } else {
+          // Search result with links
+          if (result.content?.length > 0) {
+            formattedOutput += `Links: ${jsonStringify(result.content)}\n\n`
+          } else {
+            formattedOutput += 'No links found.\n\n'
+          }
+        }
+      })
 
     formattedOutput +=
       '\nREMINDER: You MUST include the sources above in your response to the user using markdown hyperlinks.'

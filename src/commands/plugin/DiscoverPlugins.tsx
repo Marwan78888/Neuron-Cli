@@ -345,8 +345,8 @@ export function DiscoverPlugins({
         setIsSearchMode(true);
         setSearchQuery('');
       } else if (keyIsNotCtrlOrMeta && input.length > 0 && !/^\s+$/.test(input) &&
-      // Don't enter search mode for navigation keys
-      input !== 'j' && input !== 'k' && input !== 'i') {
+        // Don't enter search mode for navigation keys
+        input !== 'j' && input !== 'k' && input !== 'i') {
         setIsSearchMode(true);
         setSearchQuery(input);
       }
@@ -506,147 +506,147 @@ export function DiscoverPlugins({
     const githubRepo_1 = extractGitHubRepo(selectedPlugin);
     const menuOptions = buildPluginDetailsMenuOptions(hasHomepage_1, githubRepo_1);
     return <Box flexDirection="column">
-        <Box marginBottom={1}>
-          <Text bold>Plugin details</Text>
-        </Box>
+      <Box marginBottom={1}>
+        <Text bold>Plugin details</Text>
+      </Box>
 
-        <Box flexDirection="column" marginBottom={1}>
-          <Text bold>{selectedPlugin.entry.name}</Text>
-          <Text dimColor>from {selectedPlugin.marketplaceName}</Text>
-          {selectedPlugin.entry.version && <Text dimColor>Version: {selectedPlugin.entry.version}</Text>}
-          {selectedPlugin.entry.description && <Box marginTop={1}>
-              <Text>{selectedPlugin.entry.description}</Text>
-            </Box>}
-          {selectedPlugin.entry.author && <Box marginTop={1}>
-              <Text dimColor>
-                By:{' '}
-                {typeof selectedPlugin.entry.author === 'string' ? selectedPlugin.entry.author : selectedPlugin.entry.author.name}
-              </Text>
-            </Box>}
-        </Box>
-
-        <PluginTrustWarning />
-
-        {installError && <Box marginBottom={1}>
-            <Text color="error">Error: {installError}</Text>
-          </Box>}
-
-        <Box flexDirection="column">
-          {menuOptions.map((option, index) => <Box key={option.action}>
-              {detailsMenuIndex === index && <Text>{'> '}</Text>}
-              {detailsMenuIndex !== index && <Text>{'  '}</Text>}
-              <Text bold={detailsMenuIndex === index}>
-                {isInstalling && option.action.startsWith('install-') ? 'Installing…' : option.label}
-              </Text>
-            </Box>)}
-        </Box>
-
-        <Box marginTop={1}>
+      <Box flexDirection="column" marginBottom={1}>
+        <Text bold>{selectedPlugin.entry.name}</Text>
+        <Text dimColor>from {selectedPlugin.marketplaceName}</Text>
+        {selectedPlugin.entry.version && <Text dimColor>Version: {selectedPlugin.entry.version}</Text>}
+        {selectedPlugin.entry.description && <Box marginTop={1}>
+          <Text>{selectedPlugin.entry.description}</Text>
+        </Box>}
+        {selectedPlugin.entry.author && <Box marginTop={1}>
           <Text dimColor>
-            <Byline>
-              <ConfigurableShortcutHint action="select:accept" context="Select" fallback="Enter" description="select" />
-              <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="back" />
-            </Byline>
+            By:{' '}
+            {typeof selectedPlugin.entry.author === 'string' ? selectedPlugin.entry.author : selectedPlugin.entry.author.name}
           </Text>
-        </Box>
-      </Box>;
+        </Box>}
+      </Box>
+
+      <PluginTrustWarning />
+
+      {installError && <Box marginBottom={1}>
+        <Text color="error">Error: {installError}</Text>
+      </Box>}
+
+      <Box flexDirection="column">
+        {menuOptions.map((option, index) => <Box key={option.action}>
+          {detailsMenuIndex === index && <Text>{'> '}</Text>}
+          {detailsMenuIndex !== index && <Text>{'  '}</Text>}
+          <Text bold={detailsMenuIndex === index}>
+            {isInstalling && option.action.startsWith('install-') ? 'Installing…' : option.label}
+          </Text>
+        </Box>)}
+      </Box>
+
+      <Box marginTop={1}>
+        <Text dimColor>
+          <Byline>
+            <ConfigurableShortcutHint action="select:accept" context="Select" fallback="Enter" description="select" />
+            <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="back" />
+          </Byline>
+        </Text>
+      </Box>
+    </Box>;
   }
 
   // Empty state
   if (availablePlugins.length === 0) {
     return <Box flexDirection="column">
-        <Box marginBottom={1}>
-          <Text bold>Discover plugins</Text>
-        </Box>
-        <EmptyStateMessage reason={emptyReason} />
-        <Box marginTop={1}>
-          <Text dimColor italic>
-            Esc to go back
-          </Text>
-        </Box>
-      </Box>;
+      <Box marginBottom={1}>
+        <Text bold>Discover plugins</Text>
+      </Box>
+      <EmptyStateMessage reason={emptyReason} />
+      <Box marginTop={1}>
+        <Text dimColor italic>
+          Esc to go back
+        </Text>
+      </Box>
+    </Box>;
   }
 
   // Get visible plugins from pagination
   const visiblePlugins = pagination.getVisibleItems(filteredPlugins);
   return <Box flexDirection="column">
-      <Box>
-        <Text bold>Discover plugins</Text>
-        {pagination.needsPagination && <Text dimColor>
-            {' '}
-            ({pagination.scrollPosition.current}/
-            {pagination.scrollPosition.total})
-          </Text>}
-      </Box>
+    <Box>
+      <Text bold>Discover plugins</Text>
+      {pagination.needsPagination && <Text dimColor>
+        {' '}
+        ({pagination.scrollPosition.current}/
+        {pagination.scrollPosition.total})
+      </Text>}
+    </Box>
 
-      {/* Search box */}
-      <Box marginBottom={1}>
-        <SearchBox query={searchQuery} isFocused={isSearchMode} isTerminalFocused={isTerminalFocused} width={terminalWidth - 4} cursorOffset={searchCursorOffset} />
-      </Box>
+    {/* Search box */}
+    <Box marginBottom={1}>
+      <SearchBox query={searchQuery} isFocused={isSearchMode} isTerminalFocused={isTerminalFocused} width={terminalWidth - 4} cursorOffset={searchCursorOffset} />
+    </Box>
 
-      {/* Warning banner */}
-      {warning && <Box marginBottom={1}>
-          <Text color="warning">
-            {figures.warning} {warning}
-          </Text>
-        </Box>}
+    {/* Warning banner */}
+    {warning && <Box marginBottom={1}>
+      <Text color="warning">
+        {figures.warning} {warning}
+      </Text>
+    </Box>}
 
-      {/* No search results */}
-      {filteredPlugins.length === 0 && searchQuery && <Box marginBottom={1}>
-          <Text dimColor>No plugins match &quot;{searchQuery}&quot;</Text>
-        </Box>}
+    {/* No search results */}
+    {filteredPlugins.length === 0 && searchQuery && <Box marginBottom={1}>
+      <Text dimColor>No plugins match &quot;{searchQuery}&quot;</Text>
+    </Box>}
 
-      {/* Scroll up indicator */}
-      {pagination.scrollPosition.canScrollUp && <Box>
-          <Text dimColor> {figures.arrowUp} more above</Text>
-        </Box>}
+    {/* Scroll up indicator */}
+    {pagination.scrollPosition.canScrollUp && <Box>
+      <Text dimColor> {figures.arrowUp} more above</Text>
+    </Box>}
 
-      {/* Plugin list - use startIndex in key to force re-render on scroll */}
-      {visiblePlugins.map((plugin_5, visibleIndex) => {
+    {/* Plugin list - use startIndex in key to force re-render on scroll */}
+    {visiblePlugins.map((plugin_5, visibleIndex) => {
       const actualIndex = pagination.toActualIndex(visibleIndex);
       const isSelected = selectedIndex === actualIndex;
       const isSelectedForInstall = selectedForInstall.has(plugin_5.pluginId);
       const isInstallingThis = installingPlugins.has(plugin_5.pluginId);
       const isLast = visibleIndex === visiblePlugins.length - 1;
       return <Box key={`${pagination.startIndex}-${plugin_5.pluginId}`} flexDirection="column" marginBottom={isLast && !error ? 0 : 1}>
-            <Box>
-              <Text color={isSelected && !isSearchMode ? 'suggestion' : undefined}>
-                {isSelected && !isSearchMode ? figures.pointer : ' '}{' '}
-              </Text>
-              <Text>
-                {isInstallingThis ? figures.ellipsis : isSelectedForInstall ? figures.radioOn : figures.radioOff}{' '}
-                {plugin_5.entry.name}
-                <Text dimColor> · {plugin_5.marketplaceName}</Text>
-                {plugin_5.entry.tags?.includes('community-managed') && <Text dimColor> [Community Managed]</Text>}
-                {installCounts && plugin_5.marketplaceName === OFFICIAL_MARKETPLACE_NAME && <Text dimColor>
-                      {' · '}
-                      {formatInstallCount(installCounts.get(plugin_5.pluginId) ?? 0)}{' '}
-                      installs
-                    </Text>}
-              </Text>
-            </Box>
-            {plugin_5.entry.description && <Box marginLeft={4}>
-                <Text dimColor>
-                  {truncateToWidth(plugin_5.entry.description, 60)}
-                </Text>
-              </Box>}
-          </Box>;
-    })}
-
-      {/* Scroll down indicator */}
-      {pagination.scrollPosition.canScrollDown && <Box>
-          <Text dimColor> {figures.arrowDown} more below</Text>
-        </Box>}
-
-      {/* Error messages */}
-      {error && <Box marginTop={1}>
-          <Text color="error">
-            {figures.cross} {error}
+        <Box>
+          <Text color={isSelected && !isSearchMode ? 'suggestion' : undefined}>
+            {isSelected && !isSearchMode ? figures.pointer : ' '}{' '}
+          </Text>
+          <Text>
+            {isInstallingThis ? figures.ellipsis : isSelectedForInstall ? figures.radioOn : figures.radioOff}{' '}
+            {plugin_5.entry.name}
+            <Text dimColor> · {plugin_5.marketplaceName}</Text>
+            {plugin_5.entry.tags?.includes('community-managed') && <Text dimColor> [Community Managed]</Text>}
+            {installCounts && plugin_5.marketplaceName === OFFICIAL_MARKETPLACE_NAME && <Text dimColor>
+              {' · '}
+              {formatInstallCount(installCounts.get(plugin_5.pluginId) ?? 0)}{' '}
+              installs
+            </Text>}
+          </Text>
+        </Box>
+        {plugin_5.entry.description && <Box marginLeft={4}>
+          <Text dimColor>
+            {truncateToWidth(plugin_5.entry.description, 60)}
           </Text>
         </Box>}
+      </Box>;
+    })}
 
-      <DiscoverPluginsKeyHint hasSelection={selectedForInstall.size > 0} canToggle={selectedIndex < filteredPlugins.length && !filteredPlugins[selectedIndex]?.isInstalled} />
-    </Box>;
+    {/* Scroll down indicator */}
+    {pagination.scrollPosition.canScrollDown && <Box>
+      <Text dimColor> {figures.arrowDown} more below</Text>
+    </Box>}
+
+    {/* Error messages */}
+    {error && <Box marginTop={1}>
+      <Text color="error">
+        {figures.cross} {error}
+      </Text>
+    </Box>}
+
+    <DiscoverPluginsKeyHint hasSelection={selectedForInstall.size > 0} canToggle={selectedIndex < filteredPlugins.length && !filteredPlugins[selectedIndex]?.isInstalled} />
+  </Box>;
 }
 function DiscoverPluginsKeyHint(t0) {
   const $ = _c(10);
@@ -713,7 +713,7 @@ function EmptyStateMessage(t0) {
       {
         let t1;
         if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-          t1 = <><Text dimColor={true}>Git is required to install marketplaces.</Text><Text dimColor={true}>Please install git and restart Claude Code.</Text></>;
+          t1 = <><Text dimColor={true}>Git is required to install marketplaces.</Text><Text dimColor={true}>Please install git and restart Neuron.</Text></>;
           $[0] = t1;
         } else {
           t1 = $[0];

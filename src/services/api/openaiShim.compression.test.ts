@@ -8,6 +8,7 @@ const originalEnv = {
   OPENAI_BASE_URL: process.env.OPENAI_BASE_URL,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   OPENAI_MODEL: process.env.OPENAI_MODEL,
+  OPENAI_API_FORMAT: process.env.OPENAI_API_FORMAT,
 }
 
 // Mock config + autoCompact so the shim sees deterministic state.
@@ -78,7 +79,27 @@ function buildLongConversation(numExchanges: number, resultLength = 5_000) {
   return out
 }
 
-function makeFakeResponse(): Response {
+function makeFakeResponse(
+  apiFormat: 'chat_completions' | 'responses',
+): Response {
+  if (apiFormat === 'responses') {
+    return new Response(
+      JSON.stringify({
+        id: 'resp_1',
+        model: 'gpt-4o',
+        output: [
+          {
+            type: 'message',
+            role: 'assistant',
+            content: [{ type: 'output_text', text: 'done' }],
+          },
+        ],
+        usage: { input_tokens: 8, output_tokens: 2, total_tokens: 10 },
+      }),
+      { headers: { 'Content-Type': 'application/json' } },
+    )
+  }
+
   return new Response(
     JSON.stringify({
       id: 'chatcmpl-1',
@@ -99,6 +120,7 @@ beforeEach(() => {
   process.env.OPENAI_BASE_URL = 'http://example.test/v1'
   process.env.OPENAI_API_KEY = 'test-key'
   delete process.env.OPENAI_MODEL
+  delete process.env.OPENAI_API_FORMAT
   mockState.enabled = true
   mockState.effectiveWindow = 100_000
 })
@@ -110,18 +132,22 @@ afterEach(() => {
   else process.env.OPENAI_API_KEY = originalEnv.OPENAI_API_KEY
   if (originalEnv.OPENAI_MODEL === undefined) delete process.env.OPENAI_MODEL
   else process.env.OPENAI_MODEL = originalEnv.OPENAI_MODEL
+  if (originalEnv.OPENAI_API_FORMAT === undefined) delete process.env.OPENAI_API_FORMAT
+  else process.env.OPENAI_API_FORMAT = originalEnv.OPENAI_API_FORMAT
   globalThis.fetch = originalFetch
 })
 
 async function captureRequestBody(
   messages: Array<{ role: string; content: unknown }>,
   model: string,
+  apiFormat: 'chat_completions' | 'responses' = 'chat_completions',
 ): Promise<Record<string, unknown>> {
   let captured: Record<string, unknown> | undefined
+  process.env.OPENAI_API_FORMAT = apiFormat
 
   globalThis.fetch = (async (_input, init) => {
     captured = JSON.parse(String(init?.body))
-    return makeFakeResponse()
+    return makeFakeResponse(apiFormat)
   }) as FetchType
 
   const client = createOpenAIShimClient({}) as OpenAIShimClient
@@ -148,6 +174,35 @@ function getAssistantToolCalls(body: Record<string, unknown>): unknown[] {
   return messages
     .filter(m => m.role === 'assistant' && Array.isArray(m.tool_calls))
     .flatMap(m => m.tool_calls ?? [])
+}
+
+function getResponsesToolOutputs(
+  body: Record<string, unknown>,
+): Array<{ output: string }> {
+  const input = body.input as Array<{ type: string; output?: string }>
+  return input
+    .filter(item => item.type === 'function_call_output')
+    .map(item => ({ output: item.output ?? '' }))
+}
+
+function getResponsesFunctionCalls(
+  body: Record<string, unknown>,
+): Array<{ id: string; call_id: string; name: string; arguments: string }> {
+  const input = body.input as Array<{
+    type: string
+    id?: string
+    call_id?: string
+    name?: string
+    arguments?: string
+  }>
+  return input
+    .filter(item => item.type === 'function_call')
+    .map(item => ({
+      id: item.id ?? '',
+      call_id: item.call_id ?? '',
+      name: item.name ?? '',
+      arguments: item.arguments ?? '',
+    }))
 }
 
 // ============================================================================
@@ -290,6 +345,61 @@ test('FIX: every tool_call retains its full id, name, and arguments', async () =
       file_path: `/path/to/file${i}.ts`,
     })
   }
+})
+
+test('BUG REPRO: responses transport without compression resends all 30 tool results at full size', async () => {
+  mockState.enabled = false
+  const messages = buildLongConversation(30, 5_000)
+
+  const body = await captureRequestBody(messages, 'gpt-4o', 'responses')
+  const toolOutputs = getResponsesToolOutputs(body)
+  const payloadSize = JSON.stringify(body).length
+
+  expect(toolOutputs.length).toBe(30)
+  for (const item of toolOutputs) {
+    expect(item.output.length).toBeGreaterThanOrEqual(5_000)
+    expect(item.output).not.toContain('[…truncated')
+    expect(item.output).not.toContain('chars omitted')
+  }
+
+  expect(payloadSize).toBeGreaterThan(150_000)
+})
+
+test('FIX: responses transport applies the same compression tiers for compatible providers', async () => {
+  mockState.enabled = true
+  mockState.effectiveWindow = 100_000 // 64–128k → recent=5, mid=10
+  const messages = buildLongConversation(30, 5_000)
+
+  const body = await captureRequestBody(messages, 'gpt-4o', 'responses')
+  const toolOutputs = getResponsesToolOutputs(body)
+  const functionCalls = getResponsesFunctionCalls(body)
+  const payloadSize = JSON.stringify(body).length
+
+  expect(toolOutputs.length).toBe(30)
+  expect(functionCalls.length).toBe(30)
+
+  for (let i = 0; i <= 14; i++) {
+    expect(toolOutputs[i].output).toMatch(/^\[Read args=.*chars omitted\]$/)
+  }
+  for (let i = 15; i <= 24; i++) {
+    expect(toolOutputs[i].output).toContain('[…truncated')
+  }
+  for (let i = 25; i <= 29; i++) {
+    expect(toolOutputs[i].output.length).toBe(5_000)
+    expect(toolOutputs[i].output).not.toContain('[…truncated')
+    expect(toolOutputs[i].output).not.toContain('chars omitted')
+  }
+
+  for (let i = 0; i < functionCalls.length; i++) {
+    expect(functionCalls[i].id).toBe(`fc_toolu_${i}`)
+    expect(functionCalls[i].call_id).toBe(`toolu_${i}`)
+    expect(functionCalls[i].name).toBe('Read')
+    expect(JSON.parse(functionCalls[i].arguments)).toEqual({
+      file_path: `/path/to/file${i}.ts`,
+    })
+  }
+
+  expect(payloadSize).toBeLessThan(60_000)
 })
 
 // ============================================================================

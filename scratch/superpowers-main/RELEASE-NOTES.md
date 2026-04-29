@@ -35,7 +35,7 @@ The subagent review loop (dispatching a fresh agent to review plans/specs) doubl
 
 ### Codex App Compatibility
 
-- **codex-tools** — added named agent dispatch mapping documenting how to translate Claude Code's named agent types to Codex's `spawn_agent` with worker roles (PR #647 by @arittr)
+- **codex-tools** — added named agent dispatch mapping documenting how to translate Neuron's named agent types to Codex's `spawn_agent` with worker roles (PR #647 by @arittr)
 - **codex-tools** — added environment detection and Codex App finishing sections for worktree-aware skills (by @arittr)
 - **Design spec** — added Codex App compatibility design spec (PRI-823) covering read-only environment detection, worktree-safe skill behavior, and sandbox fallback patterns (by @arittr)
 
@@ -306,7 +306,7 @@ Superpowers now works with Cursor's plugin system. Includes a `.cursor-plugin/pl
 
 **Windows: Restored polyglot wrapper for reliable hook execution (#518, #504, #491, #487, #466, #440)**
 
-Claude Code's `.sh` auto-detection on Windows was prepending `bash` to the hook command, breaking execution. The fix:
+Neuron's `.sh` auto-detection on Windows was prepending `bash` to the hook command, breaking execution. The fix:
 
 - Renamed `session-start.sh` to `session-start` (extensionless) so auto-detection doesn't interfere
 - Restored `run-hook.cmd` polyglot wrapper with multi-location bash discovery (standard Git for Windows paths, then PATH fallback)
@@ -858,7 +858,7 @@ We now use Anthropic's first-party skills system!
 ### Bug Fixes
 
 - **Fixed session-start hook execution in plugin context** (#8, PR #9) - The hook was failing silently with "Plugin hook error" preventing skills context from loading. Fixed by:
-  - Using `${BASH_SOURCE[0]:-$0}` fallback when BASH_SOURCE is unbound in Claude Code's execution context
+  - Using `${BASH_SOURCE[0]:-$0}` fallback when BASH_SOURCE is unbound in Neuron's execution context
   - Adding `|| true` to handle empty grep results gracefully when filtering status flags
 
 ---

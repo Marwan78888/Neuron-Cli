@@ -558,7 +558,7 @@ export const SuperpowersPlugin = async ({ project, client, $, directory, worktre
           const content = contentLines.join('\n').trim();
           const skillDirectory = path.dirname(resolved.skillFile);
 
-          // Format output similar to Claude Code's Skill tool
+          // Format output similar to Neuron's Skill tool
           return `# ${name || skill_name}
 # ${description || ''}
 # Supporting tools and docs are in ${skillDirectory}

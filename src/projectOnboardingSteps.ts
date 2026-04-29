@@ -22,14 +22,14 @@ export function getSteps(): Step[] {
   return [
     {
       key: 'workspace',
-      text: 'Ask Claude to create a new app or clone a repository',
+      text: 'Ask Neuron to create a new app, explore this workspace, or clone a repository',
       isComplete: false,
       isCompletable: true,
       isEnabled: isWorkspaceDirEmpty,
     },
     {
       key: 'claudemd',
-      text: 'Set up repo instructions (/init creates AGENTS.md or updates existing NEURON.md; legacy CLAUDE.md also counts)',
+      text: 'Set up repo instructions with /init (AGENTS.md or NEURON.md; legacy instruction files also count)',
       isComplete: hasRepoInstructions,
       isCompletable: true,
       isEnabled: !isWorkspaceDirEmpty,

@@ -31,7 +31,7 @@ export function isBridgeEnabled(): boolean {
   // inline string literals from external builds.
   return feature('BRIDGE_MODE')
     ? isClaudeAISubscriber() &&
-        getFeatureValue_CACHED_MAY_BE_STALE('tengu_ccr_bridge', false)
+    getFeatureValue_CACHED_MAY_BE_STALE('tengu_ccr_bridge', false)
     : false
 }
 
@@ -50,7 +50,7 @@ export function isBridgeEnabled(): boolean {
 export async function isBridgeEnabledBlocking(): Promise<boolean> {
   return feature('BRIDGE_MODE')
     ? isClaudeAISubscriber() &&
-        (await checkGate_CACHED_OR_BLOCKING('tengu_ccr_bridge'))
+    (await checkGate_CACHED_OR_BLOCKING('tengu_ccr_bridge'))
     : false
 }
 
@@ -141,9 +141,9 @@ export function isEnvLessBridgeEnabled(): boolean {
 export function isCseShimEnabled(): boolean {
   return feature('BRIDGE_MODE')
     ? getFeatureValue_CACHED_MAY_BE_STALE(
-        'tengu_bridge_repl_v2_cse_shim_enabled',
-        true,
-      )
+      'tengu_bridge_repl_v2_cse_shim_enabled',
+      true,
+    )
     : true
 }
 
@@ -166,7 +166,7 @@ export function checkBridgeMinVersion(): string | null {
       minVersion: string
     }>('tengu_bridge_min_version', { minVersion: '0.0.0' })
     if (config.minVersion && lt(MACRO.VERSION, config.minVersion)) {
-      return `Your version of Claude Code (${MACRO.VERSION}) is too old for Remote Control.\nVersion ${config.minVersion} or higher is required. Run \`claude update\` to update.`
+      return `Your version of Neuron (${MACRO.VERSION}) is too old for Remote Control.\nVersion ${config.minVersion} or higher is required. Run \`neuron update\` to update.`
     }
   }
   return null
@@ -197,6 +197,6 @@ export function getCcrAutoConnectDefault(): boolean {
 export function isCcrMirrorEnabled(): boolean {
   return feature('CCR_MIRROR')
     ? isEnvTruthy(process.env.CLAUDE_CODE_CCR_MIRROR) ||
-        getFeatureValue_CACHED_MAY_BE_STALE('tengu_ccr_mirror', false)
+    getFeatureValue_CACHED_MAY_BE_STALE('tengu_ccr_mirror', false)
     : false
 }

@@ -47,9 +47,9 @@ export function autoModeConfigHandler(): void {
 }
 
 const CRITIQUE_SYSTEM_PROMPT =
-  'You are an expert reviewer of auto mode classifier rules for Claude Code.\n' +
+  'You are an expert reviewer of auto mode classifier rules for Neuron.\n' +
   '\n' +
-  'Claude Code has an "auto mode" that uses an AI classifier to decide whether ' +
+  'Neuron has an "auto mode" that uses an AI classifier to decide whether ' +
   'tool calls should be auto-approved or require user confirmation. Users can ' +
   'write custom rules in three categories:\n' +
   '\n' +
@@ -82,8 +82,8 @@ export async function autoModeCritiqueHandler(options: {
   if (!hasCustomRules) {
     process.stdout.write(
       'No custom auto mode rules found.\n\n' +
-        'Add rules to your settings file under autoMode.{allow, soft_deny, environment}.\n' +
-        'Run `claude auto-mode defaults` to see the default rules for reference.\n',
+      'Add rules to your settings file under autoMode.{allow, soft_deny, environment}.\n' +
+      'Run `neuron auto-mode defaults` to see the default rules for reference.\n',
     )
     return
   }

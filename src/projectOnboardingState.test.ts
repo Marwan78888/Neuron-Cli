@@ -27,7 +27,6 @@ describe('project onboarding completion', () => {
       expect(getSteps()[1]?.text).toContain('/init')
       expect(getSteps()[1]?.text).toContain('AGENTS.md')
       expect(getSteps()[1]?.text).toContain('NEURON.md')
-      expect(getSteps()[1]?.text).toContain('CLAUDE.md')
     })
   })
 

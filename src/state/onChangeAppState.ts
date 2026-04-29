@@ -6,6 +6,7 @@ import {
   clearGcpCredentialsCache,
 } from '../utils/auth.js'
 import { getGlobalConfig, saveGlobalConfig } from '../utils/config.js'
+import { getUserContext } from '../context.js'
 import { toError } from '../utils/errors.js'
 import { logError } from '../utils/log.js'
 import { applyConfigEnvironmentVariables } from '../utils/managedEnv.js'
@@ -163,6 +164,13 @@ export function onChangeAppState({
   // This ensures apiKeyHelper and AWS/GCP credential changes take effect immediately
   if (newState.settings !== oldState.settings) {
     try {
+      if (
+        newState.settings.userName !== oldState.settings.userName ||
+        newState.settings.assistantName !== oldState.settings.assistantName
+      ) {
+        getUserContext.cache.clear?.()
+      }
+
       clearApiKeyHelperCache()
       clearAwsCredentialsCache()
       clearGcpCredentialsCache()

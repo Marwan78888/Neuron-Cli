@@ -117,41 +117,41 @@ export function ResumeTask({
   }
   if (loading) {
     return <Box flexDirection="column" padding={1}>
-        <Box flexDirection="row">
-          <Spinner />
-          <Text bold>Loading Claude Code sessions…</Text>
-        </Box>
-        <Text dimColor>
-          {retrying ? 'Retrying…' : 'Fetching your Claude Code sessions…'}
-        </Text>
-      </Box>;
+      <Box flexDirection="row">
+        <Spinner />
+        <Text bold>Loading Neuron sessions…</Text>
+      </Box>
+      <Text dimColor>
+        {retrying ? 'Retrying…' : 'Fetching your Neuron sessions…'}
+      </Text>
+    </Box>;
   }
   if (loadErrorType) {
     return <Box flexDirection="column" padding={1}>
-        <Text bold color="error">
-          Error loading Claude Code sessions
-        </Text>
+      <Text bold color="error">
+        Error loading Neuron sessions
+      </Text>
 
-        {renderErrorSpecificGuidance(loadErrorType)}
+      {renderErrorSpecificGuidance(loadErrorType)}
 
-        <Text dimColor>
-          Press <Text bold>Ctrl+R</Text> to retry · Press{' '}
-          <Text bold>{escKey}</Text> to cancel
-        </Text>
-      </Box>;
+      <Text dimColor>
+        Press <Text bold>Ctrl+R</Text> to retry · Press{' '}
+        <Text bold>{escKey}</Text> to cancel
+      </Text>
+    </Box>;
   }
   if (sessions.length === 0) {
     return <Box flexDirection="column" padding={1}>
-        <Text bold>
-          No Claude Code sessions found
-          {currentRepo && <Text> for {currentRepo}</Text>}
+      <Text bold>
+        No Neuron sessions found
+        {currentRepo && <Text> for {currentRepo}</Text>}
+      </Text>
+      <Box marginTop={1}>
+        <Text dimColor>
+          Press <Text bold>{escKey}</Text> to cancel
         </Text>
-        <Box marginTop={1}>
-          <Text dimColor>
-            Press <Text bold>{escKey}</Text> to cancel
-          </Text>
-        </Box>
-      </Box>;
+      </Box>
+    </Box>;
   }
   const sessionMetadata = sessions.map(session_0 => ({
     ...session_0,
@@ -181,23 +181,23 @@ export function ResumeTask({
   // Show scroll position in title when list needs scrolling
   const showScrollPosition = sessions.length > maxVisibleOptions;
   return <Box flexDirection="column" padding={1} height={maxHeight}>
-      <Text bold>
-        Select a session to resume
-        {showScrollPosition && <Text dimColor>
-            {' '}
-            ({focusedIndex} of {sessions.length})
-          </Text>}
-        {currentRepo && <Text dimColor> ({currentRepo})</Text>}:
-      </Text>
-      <Box flexDirection="column" marginTop={1} flexGrow={1}>
-        <Box marginLeft={2}>
-          <Text bold>
-            {UPDATED_STRING.padEnd(maxTimeStringLength, ' ')}
-            {SPACE_BETWEEN_TABLE_COLUMNS}
-            {'Session Title'}
-          </Text>
-        </Box>
-        <Select visibleOptionCount={maxVisibleOptions} options={options} onChange={value => {
+    <Text bold>
+      Select a session to resume
+      {showScrollPosition && <Text dimColor>
+        {' '}
+        ({focusedIndex} of {sessions.length})
+      </Text>}
+      {currentRepo && <Text dimColor> ({currentRepo})</Text>}:
+    </Text>
+    <Box flexDirection="column" marginTop={1} flexGrow={1}>
+      <Box marginLeft={2}>
+        <Text bold>
+          {UPDATED_STRING.padEnd(maxTimeStringLength, ' ')}
+          {SPACE_BETWEEN_TABLE_COLUMNS}
+          {'Session Title'}
+        </Text>
+      </Box>
+      <Select visibleOptionCount={maxVisibleOptions} options={options} onChange={value => {
         const session_1 = sessions.find(s => s.id === value);
         if (session_1) {
           onSelect(session_1);
@@ -208,17 +208,17 @@ export function ResumeTask({
           setFocusedIndex(index + 1);
         }
       }} />
-      </Box>
-      <Box flexDirection="row">
-        <Text dimColor>
-          <Byline>
-            <KeyboardShortcutHint shortcut="↑/↓" action="select" />
-            <KeyboardShortcutHint shortcut="Enter" action="confirm" />
-            <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="cancel" />
-          </Byline>
-        </Text>
-      </Box>
-    </Box>;
+    </Box>
+    <Box flexDirection="row">
+      <Text dimColor>
+        <Byline>
+          <KeyboardShortcutHint shortcut="↑/↓" action="select" />
+          <KeyboardShortcutHint shortcut="Enter" action="confirm" />
+          <ConfigurableShortcutHint action="confirm:no" context="Confirmation" fallback="Esc" description="cancel" />
+        </Byline>
+      </Text>
+    </Box>
+  </Box>;
 }
 
 /**
@@ -245,23 +245,23 @@ function renderErrorSpecificGuidance(errorType: LoadErrorType): React.ReactNode 
   switch (errorType) {
     case 'network':
       return <Box marginY={1} flexDirection="column">
-          <Text dimColor>Check your internet connection</Text>
-        </Box>;
+        <Text dimColor>Check your internet connection</Text>
+      </Box>;
     case 'auth':
       return <Box marginY={1} flexDirection="column">
-          <Text dimColor>Teleport requires a Claude account</Text>
-          <Text dimColor>
-            Run <Text bold>/login</Text> and select &quot;Claude account with
-            subscription&quot;
-          </Text>
-        </Box>;
+        <Text dimColor>Teleport requires a Neuron account</Text>
+        <Text dimColor>
+          Run <Text bold>/login</Text> and select &quot;Neuron account with
+          subscription&quot;
+        </Text>
+      </Box>;
     case 'api':
       return <Box marginY={1} flexDirection="column">
-          <Text dimColor>Sorry, Claude encountered an error</Text>
-        </Box>;
+        <Text dimColor>Sorry, Neuron encountered an error</Text>
+      </Box>;
     case 'other':
       return <Box marginY={1} flexDirection="row">
-          <Text dimColor>Sorry, Claude Code encountered an error</Text>
-        </Box>;
+        <Text dimColor>Sorry, Neuron encountered an error</Text>
+      </Box>;
   }
 }

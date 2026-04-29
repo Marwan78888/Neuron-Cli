@@ -17,16 +17,16 @@ import { toError } from '../../utils/errors.js'
 import { truncate } from '../../utils/format.js'
 import { logError } from '../../utils/log.js'
 
-// Skill listing gets 1% of the context window (in characters)
-export const SKILL_BUDGET_CONTEXT_PERCENT = 0.01
+// Skill listing gets a small slice of the context window (in characters)
+export const SKILL_BUDGET_CONTEXT_PERCENT = 0.006
 export const CHARS_PER_TOKEN = 4
-export const DEFAULT_CHAR_BUDGET = 8_000 // Fallback: 1% of 200k × 4
+export const DEFAULT_CHAR_BUDGET = 4_800 // Fallback: 0.6% of 200k x 4
 
 // Per-entry hard cap. The listing is for discovery only — the Skill tool loads
 // full content on invoke, so verbose whenToUse strings waste turn-1 cache_creation
 // tokens without improving match rate. Applies to all entries, including bundled,
 // since the cap is generous enough to preserve the core use case.
-export const MAX_LISTING_DESC_CHARS = 250
+export const MAX_LISTING_DESC_CHARS = 180
 
 export function getCharBudget(contextWindowTokens?: number): number {
   if (Number(process.env.SLASH_COMMAND_TOOL_CHAR_BUDGET)) {

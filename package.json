@@ -1,6 +1,6 @@
 {
   "name": "@marwan_reyad/neuron-agent",
-  "version": "0.6.8",
+  "version": "0.6.17",
   "description": "Neuron is an open-source coding-agent CLI for cloud and local model providers.",
   "type": "module",
   "bin": {

@@ -1269,9 +1269,9 @@ Include 3 opportunities. Think BIG - autonomous workflows, parallel agents, iter
   },
   ...(process.env.USER_TYPE === 'ant'
     ? [
-        {
-          name: 'cc_team_improvements',
-          prompt: `Analyze this Claude Code usage data and suggest product improvements for the CC team.
+      {
+        name: 'cc_team_improvements',
+        prompt: `Analyze this Claude Code usage data and suggest product improvements for the CC team.
 
 RESPOND WITH ONLY A VALID JSON OBJECT:
 {
@@ -1281,11 +1281,11 @@ RESPOND WITH ONLY A VALID JSON OBJECT:
 }
 
 Include 2-3 improvements based on friction patterns observed.`,
-          maxTokens: 8192,
-        },
-        {
-          name: 'model_behavior_improvements',
-          prompt: `Analyze this Claude Code usage data and suggest model behavior improvements.
+        maxTokens: 8192,
+      },
+      {
+        name: 'model_behavior_improvements',
+        prompt: `Analyze this Claude Code usage data and suggest model behavior improvements.
 
 RESPOND WITH ONLY A VALID JSON OBJECT:
 {
@@ -1295,9 +1295,9 @@ RESPOND WITH ONLY A VALID JSON OBJECT:
 }
 
 Include 2-3 improvements based on friction patterns observed.`,
-          maxTokens: 8192,
-        },
-      ]
+        maxTokens: 8192,
+      },
+    ]
     : []),
   {
     name: 'fun_ending',
@@ -1495,7 +1495,7 @@ async function generateParallelInsights(
   const insights: InsightResults = {}
   for (const { name, result } of results) {
     if (result) {
-      ;(insights as Record<string, unknown>)[name] = result
+      ; (insights as Record<string, unknown>)[name] = result
     }
   }
 
@@ -1883,14 +1883,13 @@ function generateHtmlReport(
   const suggestions = insights.suggestions
   const suggestionsHtml = suggestions
     ? `
-    ${
-      suggestions.claude_md_additions &&
+    ${suggestions.claude_md_additions &&
       suggestions.claude_md_additions.length > 0
-        ? `
+      ? `
     <h2 id="section-features">Existing CC Features to Try</h2>
     <div class="claude-md-section">
       <h3>Suggested CLAUDE.md Additions</h3>
-      <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Just copy this into Claude Code to add it to your CLAUDE.md.</p>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Just copy this into Neuron to add it to your CLAUDE.md.</p>
       <div class="claude-md-actions">
         <button class="copy-all-btn" onclick="copyAllCheckedClaudeMd()">Copy All Checked</button>
       </div>
@@ -1910,11 +1909,10 @@ function generateHtmlReport(
         .join('')}
     </div>
     `
-        : ''
+      : ''
     }
-    ${
-      suggestions.features_to_try && suggestions.features_to_try.length > 0
-        ? `
+    ${suggestions.features_to_try && suggestions.features_to_try.length > 0
+      ? `
     <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Just copy this into Claude Code and it'll set it up for you.</p>
     <div class="features-section">
       ${suggestions.features_to_try
@@ -1924,8 +1922,7 @@ function generateHtmlReport(
           <div class="feature-title">${escapeHtml(feat.feature || '')}</div>
           <div class="feature-oneliner">${escapeHtml(feat.one_liner || '')}</div>
           <div class="feature-why"><strong>Why for you:</strong> ${escapeHtml(feat.why_for_you || '')}</div>
-          ${
-            feat.example_code
+          ${feat.example_code
               ? `
           <div class="feature-examples">
             <div class="feature-example">
@@ -1937,18 +1934,17 @@ function generateHtmlReport(
           </div>
           `
               : ''
-          }
+            }
         </div>
       `,
         )
         .join('')}
     </div>
     `
-        : ''
+      : ''
     }
-    ${
-      suggestions.usage_patterns && suggestions.usage_patterns.length > 0
-        ? `
+    ${suggestions.usage_patterns && suggestions.usage_patterns.length > 0
+      ? `
     <h2 id="section-patterns">New Ways to Use Claude Code</h2>
     <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Just copy this into Claude Code and it'll walk you through it.</p>
     <div class="patterns-section">
@@ -1959,8 +1955,7 @@ function generateHtmlReport(
           <div class="pattern-title">${escapeHtml(pat.title || '')}</div>
           <div class="pattern-summary">${escapeHtml(pat.suggestion || '')}</div>
           ${pat.detail ? `<div class="pattern-detail">${escapeHtml(pat.detail)}</div>` : ''}
-          ${
-            pat.copyable_prompt
+          ${pat.copyable_prompt
               ? `
           <div class="copyable-prompt-section">
             <div class="prompt-label">Paste into Claude Code:</div>
@@ -1971,14 +1966,14 @@ function generateHtmlReport(
           </div>
           `
               : ''
-          }
+            }
         </div>
       `,
         )
         .join('')}
     </div>
     `
-        : ''
+      : ''
     }
     `
     : ''
@@ -2021,8 +2016,7 @@ function generateHtmlReport(
       ? `
     <h2 id="section-feedback" class="feedback-header">Closing the Loop: Feedback for Other Teams</h2>
     <p class="feedback-intro">Suggestions for the CC product and model teams based on your usage patterns. Click to expand.</p>
-    ${
-      ccImprovements.length > 0
+    ${ccImprovements.length > 0
         ? `
     <div class="collapsible-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
@@ -2032,24 +2026,23 @@ function generateHtmlReport(
       <div class="collapsible-content">
         <div class="suggestions-section">
           ${ccImprovements
-            .map(
-              imp => `
+          .map(
+            imp => `
             <div class="feedback-card team-card">
               <div class="feedback-title">${escapeHtml(imp.title || '')}</div>
               <div class="feedback-detail">${escapeHtml(imp.detail || '')}</div>
               ${imp.evidence ? `<div class="feedback-evidence"><em>Evidence:</em> ${escapeHtml(imp.evidence)}</div>` : ''}
             </div>
           `,
-            )
-            .join('')}
+          )
+          .join('')}
         </div>
       </div>
     </div>
     `
         : ''
-    }
-    ${
-      modelImprovements.length > 0
+      }
+    ${modelImprovements.length > 0
         ? `
     <div class="collapsible-section">
       <div class="collapsible-header" onclick="toggleCollapsible(this)">
@@ -2059,22 +2052,22 @@ function generateHtmlReport(
       <div class="collapsible-content">
         <div class="suggestions-section">
           ${modelImprovements
-            .map(
-              imp => `
+          .map(
+            imp => `
             <div class="feedback-card model-card">
               <div class="feedback-title">${escapeHtml(imp.title || '')}</div>
               <div class="feedback-detail">${escapeHtml(imp.detail || '')}</div>
               ${imp.evidence ? `<div class="feedback-evidence"><em>Evidence:</em> ${escapeHtml(imp.evidence)}</div>` : ''}
             </div>
           `,
-            )
-            .join('')}
+          )
+          .join('')}
         </div>
       </div>
     </div>
     `
         : ''
-    }
+      }
     `
       : ''
 
@@ -2373,14 +2366,13 @@ function generateHtmlReport(
     <!-- Multi-clauding Section (matching Python reference) -->
     <div class="chart-card" style="margin: 24px 0;">
       <div class="chart-title">Multi-Clauding (Parallel Sessions)</div>
-      ${
-        data.multi_clauding.overlap_events === 0
-          ? `
+      ${data.multi_clauding.overlap_events === 0
+      ? `
         <p style="font-size: 14px; color: #64748b; padding: 8px 0;">
           No parallel session usage detected. You typically work with one Claude Code session at a time.
         </p>
       `
-          : `
+      : `
         <div style="display: flex; gap: 24px; margin: 12px 0;">
           <div style="text-align: center;">
             <div style="font-size: 24px; font-weight: 700; color: #7c3aed;">${data.multi_clauding.overlap_events}</div>
@@ -2400,7 +2392,7 @@ function generateHtmlReport(
           overlap in time, suggesting parallel workflows.
         </p>
       `
-      }
+    }
     </div>
 
     <!-- Time of Day & Tool Errors -->
@@ -2849,7 +2841,7 @@ const usageReport: Command = {
     // Build header with stats
     const sessionLabel =
       data.total_sessions_scanned &&
-      data.total_sessions_scanned > data.total_sessions
+        data.total_sessions_scanned > data.total_sessions
         ? `${data.total_sessions_scanned.toLocaleString()} sessions total · ${data.total_sessions} analyzed`
         : `${data.total_sessions} sessions`
     const stats = [
@@ -2888,7 +2880,7 @@ Your full shareable insights report is ready: ${reportUrl}${uploadHint}`
     return [
       {
         type: 'text',
-        text: `The user just ran /insights to generate a usage report analyzing their Claude Code sessions.
+        text: `The user just ran /insights to generate a usage report analyzing their Neuron sessions.
 
 Here is the full insights data:
 ${jsonStringify(insights, null, 2)}

@@ -252,19 +252,19 @@ function ThinkbackInstaller({
   }, [onReady, onError]);
   if (state.phase === 'error') {
     return <Box flexDirection="column">
-        <Text color="error">Error: {state.message}</Text>
-      </Box>;
+      <Text color="error">Error: {state.message}</Text>
+    </Box>;
   }
   if (state.phase === 'ready') {
     return null;
   }
   const statusMessage = state.phase === 'checking' ? 'Checking thinkback installation…' : state.phase === 'installing-marketplace' ? 'Installing marketplace…' : state.phase === 'enabling-plugin' ? 'Enabling thinkback plugin…' : 'Installing thinkback plugin…';
   return <Box flexDirection="column">
-      <Box>
-        <Spinner />
-        <Text>{progressMessage || statusMessage}</Text>
-      </Box>
-    </Box>;
+    <Box>
+      <Spinner />
+      <Text>{progressMessage || statusMessage}</Text>
+    </Box>
+  </Box>;
 }
 type MenuAction = 'play' | 'edit' | 'fix' | 'regenerate';
 type GenerativeAction = Exclude<MenuAction, 'play'>;
@@ -346,7 +346,7 @@ function ThinkbackMenu(t0) {
   }
   let t4;
   if ($[8] !== hasGenerated) {
-    t4 = !hasGenerated && <Box flexDirection="column"><Text>Relive your year of coding with Claude.</Text><Text dimColor={true}>{"We'll create a personalized ASCII animation celebrating your journey."}</Text></Box>;
+    t4 = !hasGenerated && <Box flexDirection="column"><Text>Relive your year of coding with Neuron.</Text><Text dimColor={true}>{"We'll create a personalized ASCII animation celebrating your journey."}</Text></Box>;
     $[8] = hasGenerated;
     $[9] = t4;
   } else {

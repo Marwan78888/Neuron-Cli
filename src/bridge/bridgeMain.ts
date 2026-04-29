@@ -283,33 +283,33 @@ export async function runBridgeLoop(
   // not auto-re-dispatch ACK'd work on lease expiry).
   const tokenRefresh = getAccessToken
     ? createTokenRefreshScheduler({
-        getAccessToken,
-        onRefresh: (sessionId, oauthToken) => {
-          const handle = activeSessions.get(sessionId)
-          if (!handle) {
-            return
-          }
-          if (v2Sessions.has(sessionId)) {
-            logger.logVerbose(
-              `Refreshing session ${sessionId} token via bridge/reconnect`,
-            )
-            void api
-              .reconnectSession(environmentId, sessionId)
-              .catch((err: unknown) => {
-                logger.logError(
-                  `Failed to refresh session ${sessionId} token: ${errorMessage(err)}`,
-                )
-                logForDebugging(
-                  `[bridge:token] reconnectSession(${sessionId}) failed: ${errorMessage(err)}`,
-                  { level: 'error' },
-                )
-              })
-          } else {
-            handle.updateAccessToken(oauthToken)
-          }
-        },
-        label: 'bridge',
-      })
+      getAccessToken,
+      onRefresh: (sessionId, oauthToken) => {
+        const handle = activeSessions.get(sessionId)
+        if (!handle) {
+          return
+        }
+        if (v2Sessions.has(sessionId)) {
+          logger.logVerbose(
+            `Refreshing session ${sessionId} token via bridge/reconnect`,
+          )
+          void api
+            .reconnectSession(environmentId, sessionId)
+            .catch((err: unknown) => {
+              logger.logError(
+                `Failed to refresh session ${sessionId} token: ${errorMessage(err)}`,
+              )
+              logForDebugging(
+                `[bridge:token] reconnectSession(${sessionId}) failed: ${errorMessage(err)}`,
+                { level: 'error' },
+              )
+            })
+        } else {
+          handle.updateAccessToken(oauthToken)
+        }
+      },
+      label: 'bridge',
+    })
     : null
   const loopStartTime = Date.now()
   // Track all in-flight cleanup promises (stopWork, worktree removal) so
@@ -1924,14 +1924,13 @@ USAGE
   claude remote-control [options]
 OPTIONS
   --name <name>                    Name for the session (shown in claude.ai/code)
-${
-  feature('KAIROS')
-    ? `  -c, --continue                   Resume the last session in this directory
+${feature('KAIROS')
+      ? `  -c, --continue                   Resume the last session in this directory
   --session-id <id>                Resume a specific session by ID (cannot be
                                    used with spawn flags or --continue)
 `
-    : ''
-}  --permission-mode <mode>         Permission mode for spawned sessions
+      : ''
+    }  --permission-mode <mode>         Permission mode for spawned sessions
                                    (${modes})
   --debug-file <path>              Write debug logs to file
   -v, --verbose                    Enable verbose output
@@ -2066,7 +2065,7 @@ export async function bridgeMain(args: string[]): Promise<void> {
     await Promise.race([
       Promise.all([shutdown1PEventLogging(), shutdownDatadog()]),
       sleep(500, undefined, { unref: true }),
-    ]).catch(() => {})
+    ]).catch(() => { })
     // biome-ignore lint/suspicious/noConsole: intentional error output
     console.error(
       'Error: Multi-session Remote Control is not enabled for your account yet.',
@@ -2248,11 +2247,11 @@ export async function bridgeMain(args: string[]): Promise<void> {
     })
     // biome-ignore lint/suspicious/noConsole: intentional dialog output
     console.log(
-      `\nClaude Remote Control is launching in spawn mode which lets you create new sessions in this project from Claude Code on Web or your Mobile app. Learn more here: https://code.claude.com/docs/en/remote-control\n\n` +
-        `Spawn mode for this project:\n` +
-        `  [1] same-dir \u2014 sessions share the current directory (default)\n` +
-        `  [2] worktree \u2014 each session gets an isolated git worktree\n\n` +
-        `This can be changed later or explicitly set with --spawn=same-dir or --spawn=worktree.\n`,
+      `\nNeuron Remote Control is launching in spawn mode which lets you create new sessions in this project from Neuron on Web or your Mobile app. Learn more here: https://code.claude.com/docs/en/remote-control\n\n` +
+      `Spawn mode for this project:\n` +
+      `  [1] same-dir \u2014 sessions share the current directory (default)\n` +
+      `  [2] worktree \u2014 each session gets an isolated git worktree\n\n` +
+      `This can be changed later or explicitly set with --spawn=same-dir or --spawn=worktree.\n`,
     )
     const answer = await new Promise<string>(resolve => {
       rl.question('Choose [1/2] (default: 1): ', resolve)
@@ -2959,7 +2958,7 @@ export async function runBridgeHeadless(
 
 /** BridgeLogger adapter that routes everything to a single line-log fn. */
 function createHeadlessBridgeLogger(log: (s: string) => void): BridgeLogger {
-  const noop = (): void => {}
+  const noop = (): void => { }
   return {
     printBanner: (cfg, envId) =>
       log(

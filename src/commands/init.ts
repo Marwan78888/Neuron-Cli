@@ -126,7 +126,7 @@ Prefix the file with:
 \`\`\`
 # AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Neuron (claude.ai/code) when working with code in this repository.
 \`\`\`
 
 If AGENTS.md already exists: read it, propose specific changes as diffs, and explain why each change improves it. Do not silently overwrite.

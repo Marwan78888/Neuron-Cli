@@ -19,8 +19,8 @@ export function WelcomeV2(): React.ReactNode {
       <Text bold color="white">
         Welcome to Neuron
       </Text>
-      <Text color="chromeYellow">Let&apos;s get started.</Text>
-      <Text dimColor>Focused, polished, and ready for the next task.</Text>
+      <Text color="chromeYellow">Let&apos;s tune the cockpit.</Text>
+      <Text dimColor>Fast setup, calmer defaults, sharper sessions.</Text>
     </Box>
   )
 }

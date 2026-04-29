@@ -256,7 +256,8 @@ export function getLogoDisplayData(): {
   const billingType = isClaudeAISubscriber()
     ? getSubscriptionName()
     : 'API Usage Billing'
-  const agentName = getInitialSettings().agent
+  const settings = getInitialSettings()
+  const agentName = settings.assistantName ?? settings.agent
 
   return {
     version,

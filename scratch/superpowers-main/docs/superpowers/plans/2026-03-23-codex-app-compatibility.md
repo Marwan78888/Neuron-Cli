@@ -48,7 +48,7 @@ GIT_COMMON=$(cd "$(git rev-parse --git-common-dir)" 2>/dev/null && pwd -P)
 BRANCH=$(git branch --show-current)
 ```
 
-**If `GIT_DIR` differs from `GIT_COMMON`:** You are already inside a linked worktree (created by the Codex App, Claude Code's Agent tool, a previous skill run, or the user). Do NOT create another worktree. Instead:
+**If `GIT_DIR` differs from `GIT_COMMON`:** You are already inside a linked worktree (created by the Codex App, Neuron's Agent tool, a previous skill run, or the user). Do NOT create another worktree. Instead:
 
 1. Run project setup (auto-detect package manager as in "Run Project Setup" below)
 2. Verify clean baseline (run tests as in "Verify Clean Baseline" below)

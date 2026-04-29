@@ -132,7 +132,7 @@ export const SUPPORTED_SETTINGS: Record<string, SettingConfig> = {
     source: 'settings',
     type: 'string',
     description:
-      'Preferred language for Claude responses and voice dictation (e.g., "japanese", "spanish")',
+      'Preferred language for Neuron responses and voice dictation (e.g., "japanese", "spanish")',
   },
   teammateMode: {
     source: 'global',
@@ -177,7 +177,7 @@ export const SUPPORTED_SETTINGS: Record<string, SettingConfig> = {
           source: 'global' as const,
           type: 'boolean' as const,
           description:
-            'Push to your mobile device when idle after Claude finishes (requires Remote Control)',
+            'Push to your mobile device when idle after Neuron finishes (requires Remote Control)',
         },
         inputNeededNotifEnabled: {
           source: 'global' as const,
@@ -189,7 +189,7 @@ export const SUPPORTED_SETTINGS: Record<string, SettingConfig> = {
           source: 'global' as const,
           type: 'boolean' as const,
           description:
-            'Allow Claude to push to your mobile device when it deems it appropriate (requires Remote Control)',
+            'Allow Neuron to push to your mobile device when it deems it appropriate (requires Remote Control)',
         },
       }
     : {}),

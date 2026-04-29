@@ -109,7 +109,7 @@ Plugin syntax: \`plugin-name@source\` where source is \`claude-code-marketplace\
 
 const HOOKS_DOCS = `## Hooks Configuration
 
-Hooks run commands at specific points in Claude Code's lifecycle.
+Hooks run commands at specific points in Neuron's lifecycle.
 
 ### Hook Structure
 \`\`\`json

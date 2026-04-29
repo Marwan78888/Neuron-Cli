@@ -16,8 +16,19 @@ import { execFileNoThrow } from './utils/execFileNoThrow.js'
 import { getBranch, getDefaultBranch, getIsGit, gitExe } from './utils/git.js'
 import { shouldIncludeGitInstructions } from './utils/gitSettings.js'
 import { logError } from './utils/log.js'
+import { getPersonalityLayer } from './utils/personalityLayer.js'
+import { getRepoBrainDigest } from './utils/repoBrain.js'
+import { getInitialSettings } from './utils/settings/settings.js'
 
 const MAX_STATUS_CHARS = 2000
+const MAX_CONTEXT_NAME_CHARS = 40
+
+function normalizeConfiguredName(value: string | undefined): string | undefined {
+  if (!value) return undefined
+  const normalized = value.replace(/\s+/g, ' ').trim()
+  if (!normalized) return undefined
+  return normalized.slice(0, MAX_CONTEXT_NAME_CHARS)
+}
 
 // System prompt injection for cache breaking (internal-only, ephemeral debugging state)
 let systemPromptInjection: string | null = null
@@ -170,6 +181,13 @@ export const getUserContext = memoize(
     const claudeMd = shouldDisableClaudeMd
       ? null
       : getClaudeMds(filterInjectedMemoryFiles(await getMemoryFiles()))
+    const repoBrain = isBareMode()
+      ? null
+      : await getRepoBrainDigest(process.cwd())
+    const personalityLayer = getPersonalityLayer()
+    const settings = getInitialSettings()
+    const userName = normalizeConfiguredName(settings.userName)
+    const assistantName = normalizeConfiguredName(settings.assistantName)
     // Cache for the auto-mode classifier (yoloClassifier.ts reads this
     // instead of importing claudemd.ts directly, which would create a
     // cycle through permissions/filesystem → permissions → yoloClassifier).
@@ -179,10 +197,24 @@ export const getUserContext = memoize(
       duration_ms: Date.now() - startTime,
       claudemd_length: claudeMd?.length ?? 0,
       claudemd_disabled: Boolean(shouldDisableClaudeMd),
+      repo_brain_length: repoBrain?.length ?? 0,
+      personality_layer_length: personalityLayer?.length ?? 0,
     })
 
     return {
       ...(claudeMd && { claudeMd }),
+      ...(userName
+        ? {
+            userName: `The user's preferred name is ${userName}. Use it naturally and sparingly.`,
+          }
+        : {}),
+      ...(assistantName
+        ? {
+            assistantName: `Your name is ${assistantName}. Use it when introducing yourself or if the user asks what to call you.`,
+          }
+        : {}),
+      ...(personalityLayer ? { personalityLayer } : {}),
+      ...(repoBrain ? { repoBrain } : {}),
       currentDate: `Today's date is ${getLocalISODate()}.`,
     }
   },

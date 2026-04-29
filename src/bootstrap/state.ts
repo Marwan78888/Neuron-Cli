@@ -390,8 +390,8 @@ function getInitialState(): State {
     isRemoteMode: false,
     ...(process.env.USER_TYPE === 'ant'
       ? {
-          replBridgeActive: false,
-        }
+        replBridgeActive: false,
+      }
       : {}),
     // Direct connect server URL
     directConnectServerUrl: undefined,
@@ -966,7 +966,7 @@ export function setMeter(
     description: 'Number of git commits created',
   })
   STATE.costCounter = createCounter('claude_code.cost.usage', {
-    description: 'Cost of the Claude Code session',
+    description: 'Cost of the Neuron session',
     unit: 'USD',
   })
   STATE.tokenCounter = createCounter('claude_code.token.usage', {
@@ -1574,7 +1574,7 @@ const EMPTY_SLOW_OPERATIONS: ReadonlyArray<{
 export function addSlowOperation(
   _operation: string,
   _durationMs: number,
-): void {}
+): void { }
 
 export function getSlowOperations(): ReadonlyArray<{
   operation: string
