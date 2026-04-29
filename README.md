@@ -4,15 +4,6 @@ Neuron is an open-source coding-agent CLI for cloud and local model providers.
 
 Use OpenAI-compatible APIs, Gemini, GitHub Models, Codex OAuth, Codex, Ollama, Atomic Chat, and other supported backends while keeping one terminal-first workflow: prompts, tools, agents, MCP, slash commands, and streaming output.
 
-[![PR Checks](https://github.com/Gitlawb/neuron/actions/workflows/pr-checks.yml/badge.svg?branch=main)](https://github.com/Gitlawb/neuron/actions/workflows/pr-checks.yml)
-[![Release](https://img.shields.io/github/v/tag/Gitlawb/neuron?label=release&color=0ea5e9)](https://github.com/Gitlawb/neuron/tags)
-[![Discussions](https://img.shields.io/badge/discussions-open-7c3aed)](https://github.com/Gitlawb/neuron/discussions)
-[![Security Policy](https://img.shields.io/badge/security-policy-0f766e)](SECURITY.md)
-[![License](https://img.shields.io/badge/license-MIT-2563eb)](LICENSE)
-
-Neuron is also mirrored to GitLawb:
-[gitlawb.com/node/repos/z6MkqDnb/neuron](https://gitlawb.com/node/repos/z6MkqDnb/neuron)
-
 [Quick Start](#quick-start) | [Setup Guides](#setup-guides) | [Providers](#supported-providers) | [Source Build](#source-build-and-local-development) | [VS Code Extension](#vs-code-extension) | [Sponsors](#sponsors) | [Community](#community)
 
 ## Sponsors
